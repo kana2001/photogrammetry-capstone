@@ -1,23 +1,19 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import Button from './components/Button';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>Hello!</h1>
+        <p>Welcome to the photogrammetry capstone.</p>
       </header>
+      <body>
+        <p>test</p>
+        <Button text={'Start Scan'} onClick={() => alert('Scan has commenced!')}></Button>
+        <Button text={'View Completed Scans'} onClick={() => alert('Show the scans')}></Button>
+      </body>
     </div>
   );
 }
