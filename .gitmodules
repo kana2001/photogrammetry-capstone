@@ -1,2 +1,3 @@
 [submodule "focus_stacking/focus-stack"]
+	path = focus_stacking/focus-stack
 	url = https://github.com/PetteriAimonen/focus-stack.git
