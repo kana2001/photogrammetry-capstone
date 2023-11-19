@@ -1,5 +1,6 @@
 {
   "name": "webapp",
+  "homepage": "https://kana2001.github.io/photogram-proof-of-concept/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

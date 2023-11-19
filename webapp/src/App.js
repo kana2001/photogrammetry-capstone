@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
+import { BrowserRouter as Route, Routes, Link, HashRouter } from 'react-router-dom'
 import NewScan from './views/NewScan';
 import CompletedScans from './views/CompletedScans';
 
@@ -10,7 +10,7 @@ function App() {
       <header className="App-header">
         <p>Welcome to the photogrammetry capstone (Proof of concept)</p>
       </header>
-      <Router>
+      <HashRouter>
       <div>
         <nav>
 
@@ -27,7 +27,7 @@ function App() {
           </Route>
         </Routes>
       </div>
-    </Router>
+    </HashRouter>
     </div>
   );
 }
