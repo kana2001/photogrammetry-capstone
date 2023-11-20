@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, jsonify
-
+from flask_cors import CORS
 
 def create_app(test_config=None):
     # create and configure the app
@@ -23,6 +23,9 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+
+    # Allow all origins in development. You should restrict this in production.
+    CORS(app)
 
     @app.route('/')
     def test():
