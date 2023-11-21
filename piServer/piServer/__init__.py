@@ -2,6 +2,8 @@ import os
 
 from flask import Flask, jsonify
 from flask_cors import CORS
+# from gpio_control import turn_on, turn_off, moveMotor
+import subprocess
 
 def create_app(test_config=None):
     # create and configure the app
@@ -47,5 +49,20 @@ def create_app(test_config=None):
             "url": "https://sketchfab.com/models/07a74f2302f9478f8986f13f86353ac6/embed?autostart=1&preload=1&api_version=1.0.0",
         }]
         return jsonify(data)
+
+    @app.route('/moveMotor')
+    def moveMotor():
+        subprocess.run(['sudo', 'python', 'gpio_control.py', 'moveMotor'])
+        return "Moved Motor"
+
+    @app.route('/turnOn')
+    def turnOn():
+        subprocess.run(['sudo', 'python', 'gpio_control.py', 'on'])
+        return "Turned On"
+
+    @app.route('/turnOff')
+    def turnOff():
+        subprocess.run(['sudo', 'python', 'gpio_control.py', 'off'])
+        return "Turned Off"
 
     return app
