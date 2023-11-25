@@ -2,6 +2,9 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Hosting the webapp
+Use ngrok for tunneling [https://ngrok.com/](https://ngrok.com/)
+
 ## Available Scripts
 
 In the project directory, you can run:
