@@ -4,6 +4,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 # from gpio_control import turn_on, turn_off, moveMotor
 import subprocess
+import camera_control
 
 def create_app(test_config=None):
     # create and configure the app
@@ -64,6 +65,11 @@ def create_app(test_config=None):
     def turnOff():
         subprocess.run(['sudo', 'python', 'gpio_control.py', 'off'])
         return "Turned Off"
+
+    @app.route('/sendImages')
+    def sendImages():
+        camera_control.send_file("../focus_stacking/output.jpg", "0.0.0.0")
+        return "Sent Images"
 
     return app
 
