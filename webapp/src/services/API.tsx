@@ -42,3 +42,18 @@ export async function moveMotor(): Promise<string> {
         throw error;
     }
 }
+
+// Function to make a GET request to /moveMotor route
+export async function sendImages(): Promise<string> {
+    try {
+        const response = await fetch('http://localhost:5000/sendImages');
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.text();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
