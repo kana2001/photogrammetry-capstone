@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 # from gpio_control import turn_on, turn_off, moveMotor
 import subprocess
@@ -68,8 +68,12 @@ def create_app(test_config=None):
 
     @app.route('/sendImages')
     def sendImages():
-        camera_control.send_file("../focus_stacking/output.jpg", "0.0.0.0")
-        return "Sent Images"
+        ip_address = request.args.get('ip')
+        if ip_address:
+            camera_control.send_file("../focus_stacking/output.jpg", ip_address)
+            return "Sent Images to IP: " + ip_address
+        else:
+            return "IP address missing in the query parameter."
 
     return app
 
