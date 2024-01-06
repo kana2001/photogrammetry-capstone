@@ -70,7 +70,7 @@ def create_app(test_config=None):
     def sendImages():
         ip_address = request.args.get('ip')
         if ip_address:
-            camera_control.send_file("../focus_stacking/output.jpg", ip_address)
+            camera_control.send_files("../sampleImages", ip_address)
             return "Sent Images to IP: " + ip_address
         else:
             return "IP address missing in the query parameter."

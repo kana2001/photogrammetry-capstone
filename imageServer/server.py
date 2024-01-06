@@ -1,6 +1,7 @@
 import socket
+import struct
 
-def receive_file(destination_path, port=12345):
+def receive_files(port=12345):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:
         server_socket.bind(('0.0.0.0', port))
         server_socket.listen()
@@ -8,16 +9,35 @@ def receive_file(destination_path, port=12345):
         print(f"Server listening on port {port}")
         connection, address = server_socket.accept()
 
-        with connection, open(destination_path, 'wb') as file:
+        with connection:
             print(f"Connection from {address}")
             while True:
-                data = connection.recv(1024)
-                if not data:
+                # Receive the length of the filename
+                raw = connection.recv(4)
+                if not raw:
                     break
-                file.write(data)
+                filename_length = struct.unpack(">I", raw)[0]
 
-        print(f"File received successfully at {destination_path}")
+                # Receive the filename
+                filename_bytes = connection.recv(filename_length)
+                filename = filename_bytes.decode()
 
-# Example usage on Windows
-destination_file = "PictureSample.jpg"  # Replace with the desired path on the Windows machine
-receive_file(destination_file)
+                # Receive the filesize
+                filesize = struct.unpack(">Q", connection.recv(8))[0]
+
+                # Receive and save the file
+                with open(filename, 'wb') as file:
+                    remaining = filesize
+                    while remaining:
+                        data = connection.recv(min(1024, remaining))
+                        if not data:
+                            break
+                        file.write(data)
+                        remaining -= len(data)
+
+                print(f"{filename} received successfully")
+
+        print("All files received successfully")
+
+# Example usage
+receive_files()
