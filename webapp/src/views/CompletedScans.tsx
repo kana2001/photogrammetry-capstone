@@ -5,6 +5,8 @@ interface ISketchFabModel {
   title: string;
   url: string;
 }
+// TODO: Refactor getScannedModels api into services module
+const apiPrefix = "http://127.0.0.1:5000"
 
 function CompletedScans() {
   const [currentModel, setCurrentModel] = useState<ISketchFabModel>();
@@ -12,7 +14,7 @@ function CompletedScans() {
 
   useEffect(() => {
     // Make a GET request to your backend API
-    fetch('http://localhost:5000/getScannedModels') // Replace with your API endpoint
+    fetch(`${apiPrefix}/getScannedModels`) // Replace with your API endpoint
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Network response was not ok: ${response.status}`);

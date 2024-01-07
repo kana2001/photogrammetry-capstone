@@ -1,7 +1,9 @@
+const apiPrefix = "http://127.0.0.1:5000"
+
 // Function to make a GET request to /turnOn route
 export async function turnOn(): Promise<string> {
     try {
-        const response = await fetch('http://localhost:5000/turnOn');
+        const response = await fetch(`${apiPrefix}/turnOn`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -16,7 +18,7 @@ export async function turnOn(): Promise<string> {
 // Function to make a GET request to /turnOff route
 export async function turnOff(): Promise<string> {
     try {
-        const response = await fetch('http://localhost:5000/turnOff');
+        const response = await fetch(`${apiPrefix}/turnOff`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -31,7 +33,7 @@ export async function turnOff(): Promise<string> {
 // Function to make a GET request to /moveMotor route
 export async function moveMotor(): Promise<string> {
     try {
-        const response = await fetch('http://localhost:5000/moveMotor');
+        const response = await fetch(`${apiPrefix}/moveMotor`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -46,7 +48,7 @@ export async function moveMotor(): Promise<string> {
 // Function to make a GET request to /sendImages route with an IP address query parameter
 export async function sendImages(ipAddress: string): Promise<string> {
     try {
-        const url = `http://localhost:5000/sendImages?ip=${ipAddress}`;
+        const url = `${apiPrefix}/sendImages?ip=${ipAddress}`;
         const response = await fetch(url);
 
         if (!response.ok) {
