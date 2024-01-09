@@ -2,7 +2,7 @@
 
 ## Developer Setup
 ### Create a virtual environment
-    python3 -m venv .venv
+    python3 -m venv --system-site-packages .venv
 
 ### Activate the environment
 #### mac/linux
