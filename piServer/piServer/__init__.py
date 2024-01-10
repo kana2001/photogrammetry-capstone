@@ -1,10 +1,11 @@
 import os
 
-from flask import Flask, jsonify, request
+from flask import Flask, Response, jsonify, request
 from flask_cors import CORS
 # from gpio_control import turn_on, turn_off, moveMotor
 import subprocess
-import camera_control
+import send_images
+from camera_control import CameraSingleton, capture_image_async, genFrames
 
 def create_app(test_config=None):
     # create and configure the app
@@ -70,10 +71,21 @@ def create_app(test_config=None):
     def sendImages():
         ip_address = request.args.get('ip')
         if ip_address:
-            camera_control.send_files("../sampleImages", ip_address)
+            send_images.send_files("../sampleImages", ip_address)
             return "Sent Images to IP: " + ip_address
         else:
             return "IP address missing in the query parameter."
+
+    @app.route('/video_feed')
+    def video_feed():
+        return Response(genFrames(),
+                        mimetype='multipart/x-mixed-replace; boundary=frame')
+
+    @app.route('/capture_image')
+    def capture_image_route():
+        camera = CameraSingleton.get_instance()
+        capture_image_async(camera)
+        return "Image capture initiated"
 
     return app
 

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../components/Button';
-import { moveMotor, turnOff, turnOn, sendImages } from '../services/API';
+import { moveMotor, turnOff, turnOn, sendImages, captureImage } from '../services/API';
 import InputBox from '../components/InputBox';
+import Popup from '../components/Popup';
 
 function NewScan() {
   const [imageServerIP, setimageServerIP] = useState<string>('');
-  const [isPopupOpen, setPopupOpen] = useState(false);
+  const [isImageGalleryOpen, setImageGalleryOpen] = useState(false);
   const [listOfImages, setListOfImages] = useState<string[]>([]);
+  const [isScanScreenOpen, setScanScreenOpen] = useState(false);
 
   useEffect(() => {
     // import all captured images for image gallery
@@ -18,37 +20,47 @@ function NewScan() {
     setimageServerIP(value);
   };
 
-  const togglePopup = () => {
-    setPopupOpen(!isPopupOpen);
+  const toggleImageGallery = () => {
+    setImageGalleryOpen(!isImageGalleryOpen);
   };
+
+  const toggleScanScreen = () => {
+    setScanScreenOpen(!isScanScreenOpen);
+  };
+
+  // TODO: Refactor apiPrefix into a importable const
+  const apiPrefix = "http://127.0.0.1:5000"
 
   return (
     <div>
       <h1>New Scan</h1>
       <body>
         <p>test</p>
-        <Button text={'Start Scan'} onClick={() => alert('Scan has commenced!')}></Button>
+        <Button text={'Start Scan'} onClick={toggleScanScreen}></Button>
         <Button text={'Turn On'} onClick={() => turnOn()}></Button>
         <Button text={'Turn Off'} onClick={() => turnOff()}></Button>
         <Button text={'Move Motor'} onClick={() => moveMotor()}></Button>
         <Button text={'Send Images'} onClick={() => sendImages(imageServerIP)}></Button>
-        <Button text={'View Images'} onClick={togglePopup}></Button>
+        <Button text={'View Images'} onClick={toggleImageGallery}></Button>
         <InputBox onInputChange={handleServerIPChange} />
 
-        {/*TODO: Refactor image gallery into its own component  */}
-        {isPopupOpen && (
-          <>
-            <div className="overlay" onClick={togglePopup}></div>
-            <div className="popup">
-              <h2>Image Gallery</h2>
-              <div className="image-gallery">
-                {listOfImages.map((image, index) => (
-                  <img key={index} src={image} alt={`info-${index}`} style={{ width: '100px', height: "auto" }} />
-                ))}
-              </div>
-              <button onClick={togglePopup}>Image Gallery</button>
+        {isImageGalleryOpen && (
+          <Popup togglePopup={toggleImageGallery}>
+            <h2>Image Gallery</h2>
+            <div className="image-gallery">
+              {listOfImages.map((image, index) => (
+                <img key={index} src={image} alt={`info-${index}`} style={{ width: '100px', height: "auto" }} />
+              ))}
             </div>
-          </>
+          </Popup>
+        )}
+
+        {isScanScreenOpen && (
+          <Popup togglePopup={toggleScanScreen}>
+            <h2>Scan Screen</h2>
+            <img src={`${apiPrefix}/video_feed`} width={'50%'} alt='Video_Feed' />
+            <Button text={'Take a picture'} onClick={() => captureImage()}></Button>
+          </Popup>
         )}
 
       </body>

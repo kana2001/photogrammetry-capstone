@@ -1,50 +1,56 @@
-import socket
-import time
-import os
-import struct
-# from picamera import PiCamera
+import io
+import threading
+from picamera2 import Picamera2
+from picamera2 import Picamera2
+from picamera2.encoders import JpegEncoder
+from picamera2.outputs import FileOutput
+from threading import Condition
 
-# def take_picture(file_path):
-#     camera = PiCamera()
-#     camera.resolution = (1024, 768)  # Adjust resolution as needed
-#     time.sleep(2)  # Allow the camera to warm up
-#     camera.capture(file_path)
-#     camera.close()
+class CameraSingleton:
+    _instance = None
 
-def send_files(directory, server_address, port=12345):
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as client_socket:
-        client_socket.connect((server_address, port))
-        print(f"Connected to server at {server_address}")
+    @classmethod
+    def get_instance(cls):
+        if cls._instance is None:
+            cls._instance = cls._create_instance()
+        return cls._instance
 
-        for filename in os.listdir(directory):
-            if filename.endswith((".jpg", ".jpeg", ".png")):  # Add other image formats if needed
-                filepath = os.path.join(directory, filename)
-                filesize = os.path.getsize(filepath)
+    @staticmethod
+    def _create_instance():
+        camera = Picamera2()
+        # Add any necessary configuration for the camera here
+        return camera
 
-                # Send the length of the filename, then the filename, and then the filesize
-                filename_bytes = filename.encode()
-                client_socket.sendall(struct.pack(">I", len(filename_bytes)))  # Filename length
-                client_socket.sendall(filename_bytes)  # Filename
-                client_socket.sendall(struct.pack(">Q", filesize))  # Filesize
+class StreamingOutput(io.BufferedIOBase):
+    def __init__(self):
+        self.frame = None
+        self.condition = Condition()
 
-                # Send file data
-                with open(filepath, 'rb') as file:
-                    while True:
-                        data = file.read(1024)
-                        if not data:
-                            break
-                        client_socket.sendall(data)
+    def write(self, buf):
+        with self.condition:
+            self.frame = buf
+            self.condition.notify_all()
 
-                print(f"{filename} sent successfully")
+#defines the function that generates our frames
+def genFrames():
+    camera = CameraSingleton.get_instance()
+    camera.stop_recording()
+    camera.configure(camera.create_video_configuration(main={"size": (1920, 1080)}))
+    output = StreamingOutput()
+    camera.start_recording(JpegEncoder(), FileOutput(output))
+    while True:
+        with output.condition:
+            output.condition.wait()
+            frame = output.frame
+        yield (b'--frame\r\n'
+            b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        
+def capture_image(camera: Picamera2):
+    request = camera.capture_request()
+    request.save("main", "test.jpg")
+    request.release()
+    print("Still image captured!")
 
-        print("All files sent successfully")
-
-# # Example usage on Raspberry Pi
-# source_file = "../focus_stacking/output.jpg"  # Specify the path for the captured image on the Raspberry Pi
-# server_address = "192.168.2.54"  # Replace with the IP address or hostname of your Windows machine
-
-# # # Take a picture with the Raspberry Pi camera
-# # take_picture(source_file)
-
-# # Send the captured image to the Windows machine
-# send_file(source_file, server_address)
+def capture_image_async(camera):
+    thread = threading.Thread(target=capture_image, args=(camera,))
+    thread.start()
