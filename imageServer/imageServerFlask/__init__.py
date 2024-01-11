@@ -2,8 +2,12 @@ import os
 from threading import Thread
 from flask import Flask, request
 from flask_cors import CORS
+import subprocess
 
 import server
+
+script_path = './runPhotogrammetry.sh'
+
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -39,6 +43,15 @@ def create_app(test_config=None):
     
     def handle_receive_files():
         server.receive_files()
+        # Run photogrametry on recieved images
+        try:
+            print('Starting HelloPhotogrammetry...')
+            output = subprocess.run([script_path], check=True, text=True, capture_output=True)
+            print("Shell Script Output:")
+            print(output.stdout)
+        except subprocess.CalledProcessError as e:
+            print("Shell Script Error:")
+            print(e.output)
 
     @app.route('/openSocketConnection')
     def uploadImages():
