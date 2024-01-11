@@ -1,7 +1,9 @@
 import os
+from threading import Thread
 from flask import Flask, request
 from flask_cors import CORS
 
+import server
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -35,10 +37,14 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!'
     
+    def handle_receive_files():
+        server.receive_files()
 
-    @app.route('/uploadImages')
+    @app.route('/openSocketConnection')
     def uploadImages():
-        return 'Images received successfully'
+        thread = Thread(target=handle_receive_files)
+        thread.start()
+        return 'Socket opened succesfully'
     
     return app
 

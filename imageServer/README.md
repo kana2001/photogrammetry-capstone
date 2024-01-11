@@ -12,7 +12,7 @@
     . .venv/Scripts/activate
 
 ### Start backend in debug mode
-    flask --app imageServerFlask run --debug
+    flask --app imageServerFlask run --host=0.0.0.0 --port=5050 --debug
 
 ### saving dependencies
     pip freeze > requirements.txt

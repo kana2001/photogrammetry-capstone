@@ -1,5 +1,7 @@
 import os
 
+import requests
+
 from flask import Flask, Response, jsonify, request
 from flask_cors import CORS
 # from gpio_control import turn_on, turn_off, moveMotor
@@ -72,6 +74,7 @@ def create_app(test_config=None):
     def sendImages():
         ip_address = request.args.get('ip')
         if ip_address:
+            requests.get(f"http://{ip_address}:5050/openSocketConnection")
             send_images.send_files("../sampleImages", ip_address)
             return "Sent Images to IP: " + ip_address
         else:
