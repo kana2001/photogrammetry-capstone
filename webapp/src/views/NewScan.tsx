@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../components/Button';
-import { moveMotor, turnOff, turnOn, sendImages, captureImage } from '../services/API';
+import { moveMotor, turnOff, turnOn, sendImages, captureImage, setManualFocus, setAutoFocus } from '../services/API';
 import InputBox from '../components/InputBox';
 import Popup from '../components/Popup';
 
@@ -9,6 +9,7 @@ function NewScan() {
   const [isImageGalleryOpen, setImageGalleryOpen] = useState(false);
   const [listOfImages, setListOfImages] = useState<string[]>([]);
   const [isScanScreenOpen, setScanScreenOpen] = useState(false);
+  const [lensPosition, setLensPosition] = useState<string>('');
 
   useEffect(() => {
     // import all captured images for image gallery
@@ -18,6 +19,10 @@ function NewScan() {
 
   const handleServerIPChange = (value: string) => {
     setimageServerIP(value);
+  };
+
+  const handleLensPositionChange = (value: string) => {
+    setLensPosition(value);
   };
 
   const toggleImageGallery = () => {
@@ -42,7 +47,7 @@ function NewScan() {
         <Button text={'Move Motor'} onClick={() => moveMotor()}></Button>
         <Button text={'Send Images'} onClick={() => sendImages(imageServerIP)}></Button>
         <Button text={'View Images'} onClick={toggleImageGallery}></Button>
-        <InputBox onInputChange={handleServerIPChange} />
+        <InputBox onInputChange={handleServerIPChange} placeHolder={'Server IP Address'} />
 
         {isImageGalleryOpen && (
           <Popup togglePopup={toggleImageGallery}>
@@ -59,7 +64,14 @@ function NewScan() {
           <Popup togglePopup={toggleScanScreen}>
             <h2>Scan Screen</h2>
             <img src={`${apiPrefix}/video_feed`} width={'50%'} alt='Video_Feed' />
-            <Button text={'Take a picture'} onClick={() => captureImage()}></Button>
+            <div>
+              <Button text={'Take a picture'} onClick={() => captureImage()}></Button>
+            </div>
+            <InputBox onInputChange={handleLensPositionChange} placeHolder={'Lens Position'} />
+            <Button text={'Set Focal Length'} onClick={() => setManualFocus(lensPosition)}></Button>
+            <Button text={'Auto Focus Mode'} onClick={() => setAutoFocus()}></Button>
+
+
           </Popup>
         )}
 

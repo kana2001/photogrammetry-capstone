@@ -5,6 +5,7 @@ from picamera2 import Picamera2
 from picamera2.encoders import JpegEncoder
 from picamera2.outputs import FileOutput
 from threading import Condition
+from libcamera import controls
 
 class CameraSingleton:
     _instance = None
@@ -36,6 +37,7 @@ def genFrames():
     camera = CameraSingleton.get_instance()
     camera.stop_recording()
     camera.configure(camera.create_video_configuration(main={"size": (1920, 1080)}))
+    camera.set_controls({"AfMode": controls.AfModeEnum.Continuous})
     output = StreamingOutput()
     camera.start_recording(JpegEncoder(), FileOutput(output))
     while True:
@@ -54,3 +56,11 @@ def capture_image(camera: Picamera2):
 def capture_image_async(camera):
     thread = threading.Thread(target=capture_image, args=(camera,))
     thread.start()
+
+def setManualFocus(lensPosition):
+    camera = CameraSingleton.get_instance()
+    camera.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": lensPosition})
+
+def setAutoFocus():
+    camera = CameraSingleton.get_instance()
+    camera.set_controls({"AfMode": controls.AfModeEnum.Continuous})

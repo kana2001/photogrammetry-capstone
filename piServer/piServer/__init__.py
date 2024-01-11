@@ -5,7 +5,8 @@ from flask_cors import CORS
 # from gpio_control import turn_on, turn_off, moveMotor
 import subprocess
 import send_images
-from camera_control import CameraSingleton, capture_image_async, genFrames
+from camera_control import CameraSingleton, capture_image_async, genFrames, setAutoFocus, setManualFocus
+from libcamera import controls
 
 def create_app(test_config=None):
     # create and configure the app
@@ -86,6 +87,18 @@ def create_app(test_config=None):
         camera = CameraSingleton.get_instance()
         capture_image_async(camera)
         return "Image capture initiated"
+    
+    @app.route('/setManualFocus')
+    def manualFocusRoute():
+        lensPosition = request.args.get('lensPosition')
+        setManualFocus(float(lensPosition))
+        return f"set lensPosition to ${lensPosition}"
+    
+    @app.route('/setAutoFocus')
+    def setAutoFocusRoute():
+        setAutoFocus()
+        return "set camera to AutoFocus"
+    
 
     return app
 

@@ -80,3 +80,39 @@ export async function captureImage(): Promise<string> {
         throw error;
     }
 }
+
+// Function to make a GET request to /setManualFocus route
+export async function setManualFocus(lensPosition: string): Promise<string> {
+    try {
+        const url = `${apiPrefix}/setManualFocus?lensPosition=${lensPosition}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.text();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
+// Function to make a GET request to /setAutoFocus route
+export async function setAutoFocus(): Promise<string> {
+    try {
+        const url = `${apiPrefix}/setAutoFocus?`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.text();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
