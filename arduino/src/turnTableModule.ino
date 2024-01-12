@@ -1,3 +1,5 @@
+//Motor is coded to rotate 15 degrees when input from Pi goes LOW. 
+
 //Arduino Stepper Library
 #include <Stepper.h>
 
@@ -6,37 +8,35 @@
 // 64 * 32 = 2048
 const int stepsPerRevolution = 2048;
 
+// Flag to track whether the motor has turned or not
+bool motorTurned = false;  
+
 // Connect motor shield pins IN1-IN3-IN2-IN4 to Arduino
 Stepper myStepper = Stepper(stepsPerRevolution, 8, 10, 9, 11);
 
-//For testing, push button was used
-//const int buttonPin = 2;
-
-//Input signal from Pi set to Rx pin
-const int rxPin = 0;
+//Input signal from Pi
+const int rxPin = 2;
 
 void setup() {
-  //push button set up for testing
-  //pinMode(buttonPin, INPUT);
-  pinMode(rxPin, INPUT);
-  //Initialize serial communication with a baud rate of 9600
-  Serial.begin(9600);
+  pinMode(rxPin, INPUT_PULLUP);
 }
 
-
 void loop() {
-    if (digitalRead(rxPin) == HIGH) {
+    if (digitalRead(rxPin) == LOW && !motorTurned) {
       
         // Rotate CW at 2 RPM
         myStepper.setSpeed(2);
 
         // Determine the number of steps for a 15-degree rotation 
         // 360 / 15 = 24
-        int stepsFor15Degrees = stepsPerRevolution / 24;  // 2048 / 24 = 85.333 
+        int stepsFor15Degrees = stepsPerRevolution / 24;
         myStepper.step(stepsFor15Degrees);
+        motorTurned = true; 
     }
+    
+    // Reset the flag when the rxPin signal goes high
+    else if (digitalRead(rxPin) == HIGH && motorTurned) {
+    motorTurned = false;
+    }
+
 }
-
-
-
-
