@@ -6,6 +6,7 @@ from picamera2.encoders import JpegEncoder
 from picamera2.outputs import FileOutput
 from threading import Condition
 from libcamera import controls
+import os
 
 class CameraSingleton:
     _instance = None
@@ -47,9 +48,28 @@ def genFrames():
         yield (b'--frame\r\n'
             b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
         
+def increment_filename(filename, dirname):
+    base, ext = os.path.splitext(filename)
+    index = 1
+
+    while os.path.exists(f"{dirname}/{filename}"):
+        filename = f"{base}_{index}{ext}"
+        index += 1
+
+    return filename
+
 def capture_image(camera: Picamera2):
+    dirname = "capturedImages"
+    filename = increment_filename("test.jpg", dirname)
+    
     request = camera.capture_request()
-    request.save("main", "test.jpg")
+
+    current_dir = os.getcwd()
+    if not os.path.exists(dirname):
+        os.mkdir(dirname)
+    relative_path = os.path.join(current_dir, dirname, filename)
+    
+    request.save("main", relative_path)
     request.release()
     print("Still image captured!")
 

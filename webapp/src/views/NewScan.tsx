@@ -14,7 +14,7 @@ function NewScan() {
   useEffect(() => {
     // import all captured images for image gallery
     const importAll = (r: any) => r.keys().map(r);
-    setListOfImages(importAll(require.context('../../../sampleImages/', false, /\.(png|jpe?g|svg)$/)));
+    setListOfImages(importAll(require.context('../../../piServer/capturedImages/', false, /\.(png|jpe?g|svg)$/)));
   }, []);
 
   const handleServerIPChange = (value: string) => {

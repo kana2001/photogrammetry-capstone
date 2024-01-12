@@ -73,9 +73,10 @@ def create_app(test_config=None):
     @app.route('/sendImages')
     def sendImages():
         ip_address = request.args.get('ip')
+        dirname = "capturedImages"
         if ip_address:
             requests.get(f"http://{ip_address}:5050/openSocketConnection")
-            send_images.send_files("../sampleImages", ip_address)
+            send_images.send_files(dirname, ip_address)
             return "Sent Images to IP: " + ip_address
         else:
             return "IP address missing in the query parameter."
