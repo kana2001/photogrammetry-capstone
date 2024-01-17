@@ -1,4 +1,5 @@
 import os
+import time
 
 import requests
 
@@ -103,6 +104,15 @@ def create_app(test_config=None):
         setAutoFocus()
         return "set camera to AutoFocus"
     
+    @app.route('/autoRoute')
+    def auto():
+        for i in range(24):
+            camera = CameraSingleton.get_instance()
+            capture_image_async(camera)
+            time.sleep(2)
+            subprocess.run(['sudo', 'python', 'gpio_control.py', 'moveMotor'])
+        return "Moved Motor"
+
 
     return app
 

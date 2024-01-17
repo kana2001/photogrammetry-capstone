@@ -13,10 +13,11 @@ GPIO.output(gpio_pin, GPIO.LOW)  # Ensure the GPIO pin is initially set to LOW
 # Function to turn the GPIO pin on
 def turn_on():
     GPIO.output(gpio_pin, GPIO.HIGH)
-
+    time.sleep(0.5)
 # Function to turn the GPIO pin off
 def turn_off():
     GPIO.output(gpio_pin, GPIO.LOW)
+    time.sleep(0.5)
 
 def moveMotor():
         # Trigger the Arduino by setting the GPIO pin high for a moment

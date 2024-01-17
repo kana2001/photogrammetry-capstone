@@ -116,3 +116,21 @@ export async function setAutoFocus(): Promise<string> {
         throw error;
     }
 }
+
+// Function to make a GET request to /captureImage route
+export async function autoRoute(): Promise<string> {
+    try {
+        const url = `${apiPrefix}/autoRoute`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.text();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}

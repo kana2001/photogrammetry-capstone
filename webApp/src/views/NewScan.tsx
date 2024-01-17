@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../components/Button';
-import { moveMotor, turnOff, turnOn, sendImages, captureImage, setManualFocus, setAutoFocus } from '../services/API';
+import { moveMotor, turnOff, turnOn, sendImages, captureImage, setManualFocus, setAutoFocus, autoRoute } from '../services/API';
 import InputBox from '../components/InputBox';
 import Popup from '../components/Popup';
 
@@ -41,6 +41,7 @@ function NewScan() {
       <h1>New Scan</h1>
       <body>
         <p>test</p>
+        <Button text={'Auto'} onClick={() => autoRoute()}></Button>
         <Button text={'Start Scan'} onClick={toggleScanScreen}></Button>
         <Button text={'Turn On'} onClick={() => turnOn()}></Button>
         <Button text={'Turn Off'} onClick={() => turnOff()}></Button>
