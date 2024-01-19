@@ -41,8 +41,8 @@ function NewScan() {
       <h1>New Scan</h1>
       <body>
         <p>test</p>
-        <Button text={'Auto'} onClick={() => autoRoute()}></Button>
-        <Button text={'Start Scan'} onClick={toggleScanScreen}></Button>
+        <Button text={'Start Scan'} onClick={() => autoRoute()}></Button>
+        <Button text={'Preview Screen'} onClick={toggleScanScreen}></Button>
         <Button text={'Turn On'} onClick={() => turnOn()}></Button>
         <Button text={'Turn Off'} onClick={() => turnOff()}></Button>
         <Button text={'Move Motor'} onClick={() => moveMotor()}></Button>
@@ -63,7 +63,7 @@ function NewScan() {
 
         {isScanScreenOpen && (
           <Popup togglePopup={toggleScanScreen}>
-            <h2>Scan Screen</h2>
+            <h2>Preview Screen</h2>
             <img src={`${apiPrefix}/video_feed`} width={'50%'} alt='Video_Feed' />
             <div>
               <Button text={'Take a picture'} onClick={() => captureImage()}></Button>
