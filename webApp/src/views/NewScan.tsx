@@ -3,6 +3,8 @@ import Button from '../components/Button';
 import { moveMotor, turnOff, turnOn, sendImages, captureImage, setManualFocus, setAutoFocus, autoRoute } from '../services/API';
 import InputBox from '../components/InputBox';
 import Popup from '../components/Popup';
+import ReactLoading, { LoadingType } from 'react-loading';
+
 
 function NewScan() {
   const [imageServerIP, setimageServerIP] = useState<string>('');
@@ -10,6 +12,7 @@ function NewScan() {
   const [listOfImages, setListOfImages] = useState<string[]>([]);
   const [isScanScreenOpen, setScanScreenOpen] = useState(false);
   const [lensPosition, setLensPosition] = useState<string>('');
+  const [isScanning, setIsScanning] = useState(false);
 
   useEffect(() => {
     // import all captured images for image gallery
@@ -33,6 +36,27 @@ function NewScan() {
     setScanScreenOpen(!isScanScreenOpen);
   };
 
+  async function scanOperation() {
+    setIsScanning(true);
+    for (let i = 0; i < 24; i++) {
+      await captureImage()
+      await moveMotor()
+    }
+    setIsScanning(false);
+  }
+
+  interface ExampleProps {
+    type: LoadingType;
+    color: string;
+  }
+
+  const Example: React.FC<ExampleProps> = ({ type, color }) => (
+    // <div className='loading'>
+      <ReactLoading type={type} color={color} height={375} width={375} className='loading' />
+    // </div>
+
+  );
+
   // TODO: Refactor apiPrefix into a importable const
   const apiPrefix = "http://127.0.0.1:5000"
 
@@ -41,15 +65,20 @@ function NewScan() {
       <h1>New Scan</h1>
       <body>
         <p>test</p>
-        <Button text={'Start Scan'} onClick={() => autoRoute()}></Button>
-        <Button text={'Preview Screen'} onClick={toggleScanScreen}></Button>
+        <Button text={'Start Scan'} onClick={() => scanOperation()}></Button>
+        <Button text={'Preview Screen'} onClick={(toggleScanScreen)}></Button>
         <Button text={'Turn On'} onClick={() => turnOn()}></Button>
         <Button text={'Turn Off'} onClick={() => turnOff()}></Button>
         <Button text={'Move Motor'} onClick={() => moveMotor()}></Button>
         <Button text={'Send Images'} onClick={() => sendImages(imageServerIP)}></Button>
         <Button text={'View Images'} onClick={toggleImageGallery}></Button>
         <InputBox onInputChange={handleServerIPChange} placeHolder={'Server IP Address'} />
-
+        {isScanning &&
+          (
+            <div>
+              <div className="overlay" ></div>
+              <Example type={'spin'} color={'black'}></Example>
+             </div>)}
         {isImageGalleryOpen && (
           <Popup togglePopup={toggleImageGallery}>
             <h2>Image Gallery</h2>
