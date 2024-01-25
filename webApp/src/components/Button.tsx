@@ -12,6 +12,7 @@ const Button: React.FC<ButtonProps> = ({ text, onClick, style, children }) => {
     <button
       onClick={onClick}
       style={style}
+      className='button-23'
     >
       {text}
       {children}

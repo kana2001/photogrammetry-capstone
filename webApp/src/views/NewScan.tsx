@@ -64,9 +64,8 @@ function NewScan() {
     <div>
       <h1>New Scan</h1>
       <body>
-        <p>test</p>
         <Button text={'Start Scan'} onClick={() => scanOperation()}></Button>
-        <Button text={'Preview Screen'} onClick={(toggleScanScreen)}></Button>
+        <Button text={'Camera Control'} onClick={(toggleScanScreen)}></Button>
         {/* <Button text={'Turn On Motor'} onClick={() => turnOn()}></Button>
         <Button text={'Turn Off Motor'} onClick={() => turnOff()}></Button> */}
         <Button text={'Move Slider'} onClick={() => moveSlider()}></Button>
@@ -75,6 +74,7 @@ function NewScan() {
         <Button text={'Send Images'} onClick={() => sendImages(imageServerIP)}></Button>
         <Button text={'View Images'} onClick={toggleImageGallery}></Button>
         <InputBox onInputChange={handleServerIPChange} placeHolder={'Server IP Address'} />
+        <img src={`${apiPrefix}/video_feed`} width={'90%'} alt='Video_Feed' />
         {/* {isScanning &&
           (
             <div>
@@ -94,8 +94,8 @@ function NewScan() {
 
         {isScanScreenOpen && (
           <Popup togglePopup={toggleScanScreen}>
-            <h2>Preview Screen</h2>
-            <img src={`${apiPrefix}/video_feed`} width={'50%'} alt='Video_Feed' />
+            <h2>Camera Control</h2>
+            <img src={`${apiPrefix}/video_feed`} width={'100%'} alt='Video_Feed' />
             <div>
               <Button text={'Take a picture'} onClick={() => captureImage()}></Button>
             </div>

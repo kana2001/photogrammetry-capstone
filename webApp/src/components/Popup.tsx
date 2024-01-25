@@ -12,7 +12,7 @@ function InputBox({ togglePopup, children }: InputBoxProps) {
             <div className="overlay" onClick={togglePopup}></div>
             <div className="popup">
                 {children}
-                <button onClick={togglePopup}>Close</button>
+                <button className={"button-23"} onClick={togglePopup}>Close</button>
             </div>
         </div>
     );
