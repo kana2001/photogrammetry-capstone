@@ -11,7 +11,7 @@ function NewScan() {
   const [imageServerIP, setimageServerIP] = useState<string>('');
   const [isImageGalleryOpen, setImageGalleryOpen] = useState(false);
   const [listOfImages, setListOfImages] = useState<string[]>([]);
-  const [isScanScreenOpen, setScanScreenOpen] = useState(false);
+  const [isCameraControlScreenOpen, setCameraControlScreenOpen] = useState(false);
   const [lensPosition, setLensPosition] = useState<string>('');
   const [isScanning, setIsScanning] = useState(false);
   const [showShutter, setShowShutter] = useState(false);
@@ -34,8 +34,8 @@ function NewScan() {
     setImageGalleryOpen(!isImageGalleryOpen);
   };
 
-  const toggleScanScreen = () => {
-    setScanScreenOpen(!isScanScreenOpen);
+  const toggleCameraControlScreen = () => {
+    setCameraControlScreenOpen(!isCameraControlScreenOpen);
   };
 
   async function scanOperation() {
@@ -66,16 +66,14 @@ function NewScan() {
     <div>
       <h1>New Scan</h1>
       <body>
-        <Shutter show={showShutter} duration={20}>
-          <p>This is the overlay content!</p>
-        </Shutter>
+        <Shutter show={showShutter} duration={20}></Shutter>
         <Button text={'Start Scan'} onClick={() => scanOperation()}></Button>
-        <Button text={'Camera Control'} onClick={(toggleScanScreen)}></Button>
+        <Button text={'Camera Control'} onClick={(toggleCameraControlScreen)}></Button>
         {/* <Button text={'Turn On Motor'} onClick={() => turnOn()}></Button>
         <Button text={'Turn Off Motor'} onClick={() => turnOff()}></Button> */}
         <Button text={'Move Slider'} onClick={() => moveSlider()}></Button>
         <Button text={'Move Motor'} onClick={() => moveMotor()}></Button>
-        <Button text={'Move TIlt'} onClick={() => moveTilt()}></Button>
+        <Button text={'Move Tilt'} onClick={() => moveTilt()}></Button>
         <Button text={'Send Images'} onClick={() => sendImages(imageServerIP)}></Button>
         <Button text={'View Images'} onClick={toggleImageGallery}></Button>
         <InputBox onInputChange={handleServerIPChange} placeHolder={'Server IP Address'} />
@@ -97,8 +95,8 @@ function NewScan() {
           </Popup>
         )}
 
-        {isScanScreenOpen && (
-          <Popup togglePopup={toggleScanScreen}>
+        {isCameraControlScreenOpen && (
+          <Popup togglePopup={toggleCameraControlScreen}>
             <h2>Camera Control</h2>
             <img src={`${apiPrefix}/video_feed`} width={'100%'} alt='Video_Feed' />
             <div>

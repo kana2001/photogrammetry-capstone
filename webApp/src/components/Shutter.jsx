@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Overlay = ({ show, duration, children }) => {
+const Overlay = ({ show, duration, children = undefined }) => {
   const [visible, setVisible] = useState(show);
 
   useEffect(() => {
