@@ -4,9 +4,10 @@ import sys
 
 # Set the GPIO pin number you want to control
 motor_gpio_pin = 17  
-slider_gpio_pin = 17
+slider_gpio_pin = 27
+tilt_gpio_pin = 22
 
-pins = [motor_gpio_pin, slider_gpio_pin] 
+pins = [motor_gpio_pin, slider_gpio_pin, tilt_gpio_pin] 
 
 # Function to turn the GPIO pin on
 def turn_on():
@@ -28,8 +29,12 @@ def moveSlider():
         GPIO.output(slider_gpio_pin, GPIO.HIGH)
         time.sleep(2)  # Wait for 0.5 seconds
         GPIO.output(slider_gpio_pin, GPIO.LOW)
-        # time.sleep(10)
 
+def moveTilt():
+        # Trigger the Arduino by setting the GPIO pin high for a moment
+        GPIO.output(tilt_gpio_pin, GPIO.HIGH)
+        time.sleep(1)  # Wait for 0.5 seconds
+        GPIO.output(tilt_gpio_pin, GPIO.LOW)
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:

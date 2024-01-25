@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../components/Button';
-import { moveMotor, turnOff, turnOn, sendImages, captureImage, setManualFocus, setAutoFocus, autoRoute, moveSlider } from '../services/API';
+import { moveMotor, sendImages, captureImage, setManualFocus, setAutoFocus, moveSlider, moveTilt } from '../services/API';
 import InputBox from '../components/InputBox';
 import Popup from '../components/Popup';
 import ReactLoading, { LoadingType } from 'react-loading';
@@ -71,6 +71,7 @@ function NewScan() {
         <Button text={'Turn Off Motor'} onClick={() => turnOff()}></Button> */}
         <Button text={'Move Slider'} onClick={() => moveSlider()}></Button>
         <Button text={'Move Motor'} onClick={() => moveMotor()}></Button>
+        <Button text={'Move TIlt'} onClick={() => moveTilt()}></Button>
         <Button text={'Send Images'} onClick={() => sendImages(imageServerIP)}></Button>
         <Button text={'View Images'} onClick={toggleImageGallery}></Button>
         <InputBox onInputChange={handleServerIPChange} placeHolder={'Server IP Address'} />

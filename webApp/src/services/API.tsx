@@ -45,9 +45,25 @@ export async function moveMotor(): Promise<string> {
     }
 }
 
+// Function to make a GET request to /moveSlider route
 export async function moveSlider(): Promise<string> {
     try {
         const response = await fetch(`${apiPrefix}/moveSlider`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.text();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
+// Function to make a GET request to /moveTilt route
+export async function moveTilt(): Promise<string> {
+    try {
+        const response = await fetch(`${apiPrefix}/moveTilt`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
