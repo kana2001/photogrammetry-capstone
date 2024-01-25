@@ -45,6 +45,20 @@ export async function moveMotor(): Promise<string> {
     }
 }
 
+export async function moveSlider(): Promise<string> {
+    try {
+        const response = await fetch(`${apiPrefix}/moveSlider`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.text();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
 // Function to make a GET request to /sendImages route with an IP address query parameter
 export async function sendImages(ipAddress: string): Promise<string> {
     try {

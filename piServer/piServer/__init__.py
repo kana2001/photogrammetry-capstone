@@ -61,6 +61,11 @@ def create_app(test_config=None):
         subprocess.run(['sudo', 'python', 'gpio_control.py', 'moveMotor'])
         return "Moved Motor"
 
+    @app.route('/moveSlider')
+    def moveSlider():
+        subprocess.run(['sudo', 'python', 'gpio_control.py', 'moveSlider'])
+        return "Moved Slider"
+
     @app.route('/turnOn')
     def turnOn():
         subprocess.run(['sudo', 'python', 'gpio_control.py', 'on'])

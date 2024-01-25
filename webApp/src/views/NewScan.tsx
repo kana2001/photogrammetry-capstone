@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../components/Button';
-import { moveMotor, turnOff, turnOn, sendImages, captureImage, setManualFocus, setAutoFocus, autoRoute } from '../services/API';
+import { moveMotor, turnOff, turnOn, sendImages, captureImage, setManualFocus, setAutoFocus, autoRoute, moveSlider } from '../services/API';
 import InputBox from '../components/InputBox';
 import Popup from '../components/Popup';
 import ReactLoading, { LoadingType } from 'react-loading';
@@ -67,18 +67,19 @@ function NewScan() {
         <p>test</p>
         <Button text={'Start Scan'} onClick={() => scanOperation()}></Button>
         <Button text={'Preview Screen'} onClick={(toggleScanScreen)}></Button>
-        <Button text={'Turn On'} onClick={() => turnOn()}></Button>
-        <Button text={'Turn Off'} onClick={() => turnOff()}></Button>
+        {/* <Button text={'Turn On Motor'} onClick={() => turnOn()}></Button>
+        <Button text={'Turn Off Motor'} onClick={() => turnOff()}></Button> */}
+        <Button text={'Move Slider'} onClick={() => moveSlider()}></Button>
         <Button text={'Move Motor'} onClick={() => moveMotor()}></Button>
         <Button text={'Send Images'} onClick={() => sendImages(imageServerIP)}></Button>
         <Button text={'View Images'} onClick={toggleImageGallery}></Button>
         <InputBox onInputChange={handleServerIPChange} placeHolder={'Server IP Address'} />
-        {isScanning &&
+        {/* {isScanning &&
           (
             <div>
               <div className="overlay" ></div>
               <Example type={'spin'} color={'black'}></Example>
-             </div>)}
+             </div>)} */}
         {isImageGalleryOpen && (
           <Popup togglePopup={toggleImageGallery}>
             <h2>Image Gallery</h2>
