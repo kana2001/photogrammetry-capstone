@@ -21,7 +21,7 @@ def turn_off():
 def moveMotor():
         # Trigger the Arduino by setting the GPIO pin high for a moment
         GPIO.output(motor_gpio_pin, GPIO.HIGH)
-        time.sleep(0.5)  # Wait for 0.5 seconds
+        time.sleep(2)  # Wait for 2 seconds
         GPIO.output(motor_gpio_pin, GPIO.LOW)
 
 def moveSlider():

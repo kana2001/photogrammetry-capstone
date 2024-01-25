@@ -1,6 +1,8 @@
 .App {
   text-align: center;
   font-family: Circular,-apple-system,BlinkMacSystemFont,Roboto,"Helvetica Neue",sans-serif;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .App-logo {
@@ -146,4 +148,24 @@ input[type=text] {
 
 img {
   border-radius: 8px;
+}
+
+.shutter-overlay {
+  position: fixed; /* or absolute */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* black with opacity */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 5ms; /* adjust time for fade effect */
+  pointer-events: none; /* makes sure clicks go through the overlay */
+  z-index: 1001;
+}
+
+.shutter-overlay-fade-out {
+  opacity: 0;
+  visibility: hidden;
 }

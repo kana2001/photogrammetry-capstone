@@ -93,8 +93,9 @@ export async function sendImages(ipAddress: string): Promise<string> {
     }
 }
 
+
 // Function to make a GET request to /captureImage route
-export async function captureImage(): Promise<string> {
+export async function captureImage(setShowShutter: React.Dispatch<React.SetStateAction<boolean>>): Promise<string> {
     try {
         const url = `${apiPrefix}/capture_image`;
         const response = await fetch(url);
@@ -104,6 +105,12 @@ export async function captureImage(): Promise<string> {
         }
 
         const data = await response.text();
+        setShowShutter(true);
+        const shutter = new Audio('/shutter.wav');
+        shutter.play();
+        setTimeout(() => {
+            setShowShutter(false);
+        }, 50); // Replace 2000 with however many milliseconds you want
         return data;
     } catch (error) {
         console.error('Error:', error);

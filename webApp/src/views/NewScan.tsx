@@ -4,6 +4,7 @@ import { moveMotor, sendImages, captureImage, setManualFocus, setAutoFocus, move
 import InputBox from '../components/InputBox';
 import Popup from '../components/Popup';
 import ReactLoading, { LoadingType } from 'react-loading';
+import Shutter from '../components/Shutter';
 
 
 function NewScan() {
@@ -13,6 +14,7 @@ function NewScan() {
   const [isScanScreenOpen, setScanScreenOpen] = useState(false);
   const [lensPosition, setLensPosition] = useState<string>('');
   const [isScanning, setIsScanning] = useState(false);
+  const [showShutter, setShowShutter] = useState(false);
 
   useEffect(() => {
     // import all captured images for image gallery
@@ -39,7 +41,7 @@ function NewScan() {
   async function scanOperation() {
     setIsScanning(true);
     for (let i = 0; i < 24; i++) {
-      await captureImage()
+      await captureImage(setShowShutter)
       await moveMotor()
     }
     setIsScanning(false);
@@ -64,6 +66,9 @@ function NewScan() {
     <div>
       <h1>New Scan</h1>
       <body>
+        <Shutter show={showShutter} duration={20}>
+          <p>This is the overlay content!</p>
+        </Shutter>
         <Button text={'Start Scan'} onClick={() => scanOperation()}></Button>
         <Button text={'Camera Control'} onClick={(toggleScanScreen)}></Button>
         {/* <Button text={'Turn On Motor'} onClick={() => turnOn()}></Button>
@@ -97,7 +102,7 @@ function NewScan() {
             <h2>Camera Control</h2>
             <img src={`${apiPrefix}/video_feed`} width={'100%'} alt='Video_Feed' />
             <div>
-              <Button text={'Take a picture'} onClick={() => captureImage()}></Button>
+              <Button text={'Take a picture'} onClick={() => captureImage(setShowShutter)}></Button>
             </div>
             <InputBox onInputChange={handleLensPositionChange} placeHolder={'Lens Position'} />
             <Button text={'Set Focal Length'} onClick={() => setManualFocus(lensPosition)}></Button>

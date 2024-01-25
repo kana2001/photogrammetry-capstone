@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>Welcome to the photogrammetry capstone (Proof of concept)</p>
+        {/* <p>Welcome to the photogrammetry capstone (Proof of concept)</p> */}
       </header>
       <Router>
       <div>
