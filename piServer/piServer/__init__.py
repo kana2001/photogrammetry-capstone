@@ -5,7 +5,7 @@ from flask import Flask, Response, jsonify, request
 from flask_cors import CORS
 import subprocess
 import send_images
-from camera_control import CameraSingleton, capture_image_async, genFrames, setAutoFocus, setManualFocus
+from camera_control import Camera, capture_image_async, genFrames, setAutoFocus, setManualFocus
 from libcamera import controls
 import RPi.GPIO as GPIO
 import gpio_control
@@ -109,7 +109,7 @@ def create_app(test_config=None):
 
     @app.route('/capture_image')
     def capture_image_route():
-        camera = CameraSingleton.get_instance()
+        camera = Camera.get_instance()
         capture_image_async(camera)
         return "Image capture initiated"
     

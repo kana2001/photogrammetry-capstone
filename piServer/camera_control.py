@@ -8,21 +8,40 @@ from threading import Condition
 from libcamera import controls
 import os
 
-class CameraSingleton:
+# This class is a singleton class that is used to 
+# access the picamera2 functions for use with the IMX519
+class Camera:
     _instance = None
+
+    def __init__(self):
+        self._camera = self._create_instance()
+        self.output = self._create_output()
 
     @classmethod
     def get_instance(cls):
         if cls._instance is None:
-            cls._instance = cls._create_instance()
+            cls._instance = cls()
         return cls._instance
 
-    @staticmethod
-    def _create_instance():
+    # proxy method calls to Picamera2
+    def __getattr__(self, attr):
+        return getattr(self._camera, attr)
+
+    def _create_instance(self):
         camera = Picamera2()
         # Add any necessary configuration for the camera here
         return camera
 
+    def _create_output(self):
+        camera = self._camera
+        camera.stop_recording()
+        camera.configure(camera.create_video_configuration(main={"size": (1920, 1080)}))
+        camera.set_controls({"AfMode": controls.AfModeEnum.Continuous})
+        output = StreamingOutput()
+        camera.start_recording(JpegEncoder(), FileOutput(output))
+        return output
+
+# This class is provides the camera output
 class StreamingOutput(io.BufferedIOBase):
     def __init__(self):
         self.frame = None
@@ -35,12 +54,8 @@ class StreamingOutput(io.BufferedIOBase):
 
 #defines the function that generates our frames
 def genFrames():
-    camera = CameraSingleton.get_instance()
-    camera.stop_recording()
-    camera.configure(camera.create_video_configuration(main={"size": (1920, 1080)}))
-    camera.set_controls({"AfMode": controls.AfModeEnum.Continuous})
-    output = StreamingOutput()
-    camera.start_recording(JpegEncoder(), FileOutput(output))
+    camera = Camera.get_instance()
+    output = camera.output
     while True:
         with output.condition:
             output.condition.wait()
@@ -78,9 +93,9 @@ def capture_image_async(camera):
     thread.start()
 
 def setManualFocus(lensPosition):
-    camera = CameraSingleton.get_instance()
+    camera = Camera.get_instance()
     camera.set_controls({"AfMode": controls.AfModeEnum.Manual, "LensPosition": lensPosition})
 
 def setAutoFocus():
-    camera = CameraSingleton.get_instance()
+    camera = Camera.get_instance()
     camera.set_controls({"AfMode": controls.AfModeEnum.Continuous})
