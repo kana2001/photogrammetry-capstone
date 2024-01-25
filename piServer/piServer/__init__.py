@@ -1,15 +1,15 @@
 import os
 import time
-
 import requests
-
 from flask import Flask, Response, jsonify, request
 from flask_cors import CORS
-# from gpio_control import turn_on, turn_off, moveMotor
 import subprocess
 import send_images
 from camera_control import CameraSingleton, capture_image_async, genFrames, setAutoFocus, setManualFocus
 from libcamera import controls
+import RPi.GPIO as GPIO
+import gpio_control
+
 
 def create_app(test_config=None):
     # create and configure the app
@@ -35,6 +35,11 @@ def create_app(test_config=None):
     # Allow all origins in development. You should restrict this in production.
     CORS(app)
 
+    GPIO.setmode(GPIO.BCM)
+    for pin in gpio_control.pins:
+        GPIO.setup(pin, GPIO.OUT)
+        GPIO.output(pin, GPIO.LOW)    
+
     @app.route('/')
     def test():
         return 'test'
@@ -57,23 +62,27 @@ def create_app(test_config=None):
         return jsonify(data)
 
     @app.route('/moveMotor')
-    def moveMotor():
-        subprocess.run(['sudo', 'python', 'gpio_control.py', 'moveMotor'])
+    def moveMotorRoute():
+        gpio_control.moveMotor()
+        # subprocess.run(['sudo', 'python', 'gpio_control.py', 'moveMotor'])
         return "Moved Motor"
 
     @app.route('/moveSlider')
     def moveSlider():
-        subprocess.run(['sudo', 'python', 'gpio_control.py', 'moveSlider'])
+        gpio_control.moveSlider()
+        # subprocess.run(['sudo', 'python', 'gpio_control.py', 'moveSlider'])
         return "Moved Slider"
 
     @app.route('/turnOn')
     def turnOn():
-        subprocess.run(['sudo', 'python', 'gpio_control.py', 'on'])
+        gpio_control.turn_on()
+        # subprocess.run(['sudo', 'python', 'gpio_control.py', 'on'])
         return "Turned On"
 
     @app.route('/turnOff')
     def turnOff():
-        subprocess.run(['sudo', 'python', 'gpio_control.py', 'off'])
+        gpio_control.turn_off()
+        # subprocess.run(['sudo', 'python', 'gpio_control.py', 'off'])
         return "Turned Off"
 
     @app.route('/sendImages')
@@ -111,14 +120,13 @@ def create_app(test_config=None):
     
     @app.route('/autoRoute')
     def auto():
-        for i in range(24):
-            camera = CameraSingleton.get_instance()
-            capture_image_async(camera)
-            time.sleep(2)
-            subprocess.run(['sudo', 'python', 'gpio_control.py', 'moveMotor'])
-        return "Moved Motor"
-
-
+        # for i in range(24):
+        #     camera = CameraSingleton.get_instance()
+        #     capture_image_async(camera)
+        #     time.sleep(2)
+        #     subprocess.run(['sudo', 'python', 'gpio_control.py', 'moveMotor'])
+        return "This route is deprecated"
+    
     return app
 
 # if __name__ == "__main__":

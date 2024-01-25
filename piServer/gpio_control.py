@@ -3,16 +3,10 @@ import time
 import sys
 
 # Set the GPIO pin number you want to control
-motor_gpio_pin = 17  # Change this to your desired GPIO pin number
-slider_gpio_pin = 27  # Change this to your desired GPIO pin number
+motor_gpio_pin = 17  
+slider_gpio_pin = 17
 
-# Initialize GPIO
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(motor_gpio_pin, GPIO.OUT)
-GPIO.output(motor_gpio_pin, GPIO.LOW)  # Ensure the GPIO pin is initially set to LOW
-
-GPIO.setup(slider_gpio_pin, GPIO.OUT)
-GPIO.output(slider_gpio_pin, GPIO.LOW)  # Ensure the GPIO pin is initially set to LOW
+pins = [motor_gpio_pin, slider_gpio_pin] 
 
 # Function to turn the GPIO pin on
 def turn_on():
@@ -35,6 +29,7 @@ def moveSlider():
         time.sleep(2)  # Wait for 0.5 seconds
         GPIO.output(slider_gpio_pin, GPIO.LOW)
         # time.sleep(10)
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
