@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SketchfabViewer from "../components/SketchFab";
+import Gallery from "../components/Gallery";
 
 interface ISketchFabModel {
   title: string;
@@ -47,9 +48,18 @@ function CompletedScans() {
   //   },
   // ];
 
+
+  const test = `aa.glb`;
+
+  const kaws = [{ 
+    title: "aa", thumbnailUrl: "aa.jpg", modelUrl: test },
+  { title: "aa1", thumbnailUrl: "aa.jpg", modelUrl: test },
+  { title: "bb", thumbnailUrl: "bb.jpg", modelUrl: test }]
+
   return (
     <div>
       <h1>Completed Scans</h1>
+
       <ul style={{ listStyleType: "none", padding: 0 }}>
         {sketchFabData?.map((model) => {
           return (
@@ -63,7 +73,10 @@ function CompletedScans() {
         })}
       </ul>
 
-      
+      <div>
+        <div> Models </div>
+        <Gallery models={kaws}></Gallery>
+      </div>
     </div>
   );
 }
