@@ -32,6 +32,7 @@ const Gallery: React.FC<GalleryProps> = ({models }) => {
             alt={model.title}
             onClick={() => handleThumbnailClick(model)}
             style={{maxWidth:'25%', padding:'2px'}}
+            className={'model-thumbnail'}
           />
         ))}
       </div>
