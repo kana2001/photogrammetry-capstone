@@ -1,3 +1,6 @@
 [submodule "focus_stacking/focus-stack"]
 	path = focus_stacking/focus-stack
 	url = https://github.com/PetteriAimonen/focus-stack.git
+[submodule "imageServer/modules/USDConverter"]
+	path = imageServer/modules/USDConverter
+	url = https://github.com/SamusAranX/USDConverter
