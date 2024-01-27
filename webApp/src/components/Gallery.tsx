@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import ModelPopup from './ModelPopup';
 
 interface Model {
-  title: string;
-  thumbnailUrl: string;
-  modelUrl: string;
+  name: string;
+  jpg_url: string;
+  glb_path: string;
+  scanComplete: boolean;
+  usdz_path: string;
 }
 
 interface GalleryProps {
@@ -28,8 +30,8 @@ const Gallery: React.FC<GalleryProps> = ({models }) => {
         {models.map((model, index) => (
           <img
             key={index}
-            src={model.thumbnailUrl}
-            alt={model.title}
+            src={model.jpg_url}
+            alt={model.name}
             onClick={() => handleThumbnailClick(model)}
             style={{maxWidth:'25%', padding:'2px'}}
             className={'model-thumbnail'}

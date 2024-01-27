@@ -3,9 +3,11 @@ import Popup from './Popup';
 import ModelGLB from './ModelGLB';
 
 interface Model {
-  title: string;
-  thumbnailUrl: string;
-  modelUrl: string;
+  name: string;
+  jpg_url: string;
+  glb_path: string;
+  scanComplete: boolean;
+  usdz_path: string;
 }
 
 interface ModelPopupProps {
@@ -17,9 +19,8 @@ const ModelPopup: React.FC<ModelPopupProps> = ({ image, onClose }) => {
   return (
     
     <Popup togglePopup={onClose}>
-      {/* <img src={image.thumbnailUrl} alt={image.title} /> */}
-      <ModelGLB></ModelGLB>
-      <p>{image.title}</p>
+      <ModelGLB src={image.glb_path} iosSrc={image.usdz_path} poster={image.jpg_url}></ModelGLB>
+      <p>{image.name}</p>
     </Popup>
   );
 };

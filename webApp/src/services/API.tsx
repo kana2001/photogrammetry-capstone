@@ -171,3 +171,18 @@ export async function autoRoute(): Promise<string> {
         throw error;
     }
 }
+
+// Function to make a GET request to /fetchModels route
+export async function fetchModels() {
+    try {
+        const url = `${apiPrefix}/models`
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}

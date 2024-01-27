@@ -30,16 +30,13 @@ interface ModelViewerJSX {
   sx?: any;
   style?: React.CSSProperties;
 }
-const ModelGLB = () => {
-
-  const glbSrc = "/aa.glb";
-  const iosSrc = "/aa.usdz";
+const ModelGLB: React.FC<ModelViewerJSX>= ({src, iosSrc, poster}) => {
 
   return (
     <div>
       <model-viewer
         id="first"
-        src={glbSrc}
+        src={src}
         ios-src={iosSrc}
         seamless-poster
         environment-image="neutral"
@@ -56,7 +53,7 @@ const ModelGLB = () => {
         style={{width:"80vw", height:"80vh"}}
       >
         <div className="poster" slot="poster">
-          <img className="pre-prompt" src="/glb/prompt.svg" />
+          <img className="pre-prompt" src="/glb/prompt.svg" alt="pre-prompt" />
         </div>
       </model-viewer>
     </div>

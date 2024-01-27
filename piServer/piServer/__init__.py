@@ -4,6 +4,7 @@ import requests
 from flask import Flask, Response, jsonify, request
 from flask_cors import CORS
 import subprocess
+from .modelTransactions import get_models_from_imageServer
 import send_images
 from camera_control import Camera, capture_image_async, genFrames, setAutoFocus, setManualFocus
 from libcamera import controls
@@ -133,6 +134,9 @@ def create_app(test_config=None):
         #     subprocess.run(['sudo', 'python', 'gpio_control.py', 'moveMotor'])
         return "This route is deprecated"
     
+    @app.route('/models')
+    def modelsRoute():
+        return get_models_from_imageServer()
     return app
 
 # if __name__ == "__main__":
