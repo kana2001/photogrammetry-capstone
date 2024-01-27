@@ -1,3 +1,4 @@
+import shutil
 import socket
 import struct
 import os
@@ -6,6 +7,9 @@ def receive_files(port=12345):
     save_directory="received_images"
      # Create the directory if it doesn't exist
     if not os.path.exists(save_directory):
+        os.makedirs(save_directory)
+    else:
+        shutil.rmtree(save_directory)
         os.makedirs(save_directory)
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server_socket:

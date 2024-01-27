@@ -111,6 +111,23 @@ def get_all_models():
         print(e)  #
         abort(500)  # Internal Server Error
 
+def check_unique_model_name(modelName):
+    try:
+        with sqlite3.connect(dbName) as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT name FROM models WHERE name=?", (modelName,))
+            result = cursor.fetchone()
+
+            if result is not None:
+                # print('notunqiue')
+                return False
+            else:
+                # print('unique')
+                return True
+    except Exception as e:
+        print(e)  
+
 # Example usage
 # create_model_table()
 # insert_model('Model2', 'glb/example3.glb', 'usdz/example3.usdz', 'jpg/example3.jpg', 1)
+# check_unique_model_name("Model3")

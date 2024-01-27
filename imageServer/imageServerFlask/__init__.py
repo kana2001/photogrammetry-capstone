@@ -4,12 +4,14 @@ from flask import Flask, request, send_from_directory, abort, jsonify
 from flask_cors import CORS
 import subprocess
 import sqlite3
+import shutil
 # from imageServer.imageServerFlask.dbActions import get_model_file
-from .dbActions import get_all_models_name, get_all_models, get_model_file
+from .dbActions import check_unique_model_name, get_all_models_name, get_all_models, get_model_file, insert_model
 
 import server
 
 script_path = './runPhotogrammetry.sh'
+
 
 def create_app(test_config=None):
     # create and configure the app
@@ -43,34 +45,68 @@ def create_app(test_config=None):
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
-    
-    def handle_receive_files():
+
+    def handle_receive_files(model_name):
         server.receive_files()
         # Run photogrametry on recieved images
         try:
             print('Starting HelloPhotogrammetry...')
-            output = subprocess.run([script_path], check=True, text=True, capture_output=True)
+            output = subprocess.run(
+                [script_path], check=True, text=True, capture_output=True)
             print("Shell Script Output:")
             print(output.stdout)
         except subprocess.CalledProcessError as e:
             print("Shell Script Error:")
             print(e.output)
 
+        try:
+            print('Converting usdz file to glb...')
+            subprocess.run(['dotnet', 'run', '--project',
+                           'usdzToGlb/usdzToGlb', 'received_images/model.usdz'])
+        except subprocess.CalledProcessError as e:
+            print("usdz To glb error:")
+            print(e.output)
+
+        shutil.copy('received_images/test.jpg',
+                    f'imageServerFlask/models/jpg/{model_name}.jpg')
+        shutil.copy('received_images/model.usdz',
+                    f'imageServerFlask/models/usdz/{model_name}.usdz')
+        shutil.copy('received_images/model.glb',
+                    f'imageServerFlask/models/glb/{model_name}.glb')
+
+        insert_model(model_name, f'glb/{model_name}.glb',
+                     f'usdz/{model_name}.usdz', f'jpg/{model_name}.jpg', 1)
+        print(f'added model {model_name} to db')
+
     @app.route('/openSocketConnection')
     def uploadImages():
-        thread = Thread(target=handle_receive_files)
+        model_name = request.args.get('modelName')
+        print(model_name)
+        if (not check_unique_model_name(model_name)):
+            print('Image Transfer failed: User did not enter a unique name.')
+            response = {
+                "success": False,
+                "message": "User did not enter a unique model name"
+            }
+            return jsonify(response), 400
+        thread = Thread(target=handle_receive_files, args=(model_name,))
         thread.start()
-        return 'Socket opened succesfully'
-    
+        response = {
+            "success": True,
+            "message": "Socket opened successfully"
+        }
+        return jsonify(response)
+
     @app.route('/model/<string:model_name>/<file_type>')
     def get_model_file_route(model_name, file_type):
         return get_model_file(model_name, file_type)
-    
+
     @app.route('/models')
     def models_route():
         model_details = get_all_models()
         return jsonify(model_details)
     return app
+
 
 if __name__ == '__main__':
     app = create_app()

@@ -13,3 +13,5 @@ htmlcov/
 dist/
 build/
 *.egg-info/
+imageServerFlask/models
+received_images
