@@ -1,8 +1,11 @@
 import os
 from threading import Thread
-from flask import Flask, request
+from flask import Flask, request, send_from_directory, abort
 from flask_cors import CORS
 import subprocess
+import sqlite3
+# from imageServer.imageServerFlask.dbActions import get_model_file
+from .dbActions import get_model_file
 
 import server
 
@@ -58,6 +61,10 @@ def create_app(test_config=None):
         thread = Thread(target=handle_receive_files)
         thread.start()
         return 'Socket opened succesfully'
+    
+    @app.route('/model/<string:model_name>/<file_type>')
+    def get_model_file_route(model_name, file_type):
+        return get_model_file(model_name, file_type)
     
     return app
 
