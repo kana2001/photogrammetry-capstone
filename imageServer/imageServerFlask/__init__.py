@@ -5,7 +5,7 @@ from flask_cors import CORS
 import subprocess
 import sqlite3
 # from imageServer.imageServerFlask.dbActions import get_model_file
-from .dbActions import get_all_models_name, get_model_file
+from .dbActions import get_all_models_name, get_all_models, get_model_file
 
 import server
 
@@ -68,7 +68,7 @@ def create_app(test_config=None):
     
     @app.route('/models')
     def models_route():
-        model_details = get_all_models_name()
+        model_details = get_all_models()
         return jsonify(model_details)
     return app
 
