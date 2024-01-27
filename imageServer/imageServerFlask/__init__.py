@@ -1,11 +1,11 @@
 import os
 from threading import Thread
-from flask import Flask, request, send_from_directory, abort
+from flask import Flask, request, send_from_directory, abort, jsonify
 from flask_cors import CORS
 import subprocess
 import sqlite3
 # from imageServer.imageServerFlask.dbActions import get_model_file
-from .dbActions import get_model_file
+from .dbActions import get_all_models_name, get_model_file
 
 import server
 
@@ -66,6 +66,10 @@ def create_app(test_config=None):
     def get_model_file_route(model_name, file_type):
         return get_model_file(model_name, file_type)
     
+    @app.route('/models')
+    def models_route():
+        model_details = get_all_models_name()
+        return jsonify(model_details)
     return app
 
 if __name__ == '__main__':
