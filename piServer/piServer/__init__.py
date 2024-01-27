@@ -95,13 +95,21 @@ def create_app(test_config=None):
     @app.route('/sendImages')
     def sendImages():
         ip_address = request.args.get('ip')
+        model_name = request.args.get('modelName')
         dirname = "capturedImages"
-        if ip_address:
-            requests.get(f"http://{ip_address}:5050/openSocketConnection")
+        
+        if not ip_address:
+            return jsonify({"success": False, "message": "IP address missing in the query parameter"}), 400
+        
+        response = requests.get(f"http://{ip_address}:5050/openSocketConnection?modelName={model_name}")
+        
+        if response.status_code == 200:
             send_images.send_files(dirname, ip_address)
-            return "Sent Images to IP: " + ip_address
+            return jsonify({"success": True, "message": f"Sent Images to IP: {ip_address}"})
+        elif response.status_code == 400:
+            return jsonify({"success": False, "message": "User did not enter a unique model name"}), 400
         else:
-            return "IP address missing in the query parameter."
+            return jsonify({"success": False, "message": "Failed to open socket connection"}), 500
 
     @app.route('/video_feed')
     def video_feed():

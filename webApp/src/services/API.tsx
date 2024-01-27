@@ -75,10 +75,10 @@ export async function moveTilt(): Promise<string> {
     }
 }
 
-// Function to make a GET request to /sendImages route with an IP address query parameter
-export async function sendImages(ipAddress: string): Promise<string> {
+// Function to make a GET request to /sendImages route with IP address and modelName query parameters
+export async function sendImages(ipAddress: string, modelName:string): Promise<string> {
     try {
-        const url = `${apiPrefix}/sendImages?ip=${ipAddress}`;
+        const url = `${apiPrefix}/sendImages?ip=${ipAddress}&modelName=${modelName}`;
         const response = await fetch(url);
 
         if (!response.ok) {

@@ -9,6 +9,7 @@ import Shutter from '../components/Shutter';
 
 function NewScan() {
   const [imageServerIP, setimageServerIP] = useState<string>('');
+  const [modelName, setModelName] = useState<string>('');
   const [isImageGalleryOpen, setImageGalleryOpen] = useState(false);
   const [listOfImages, setListOfImages] = useState<string[]>([]);
   const [isCameraControlScreenOpen, setCameraControlScreenOpen] = useState(false);
@@ -24,6 +25,10 @@ function NewScan() {
 
   const handleServerIPChange = (value: string) => {
     setimageServerIP(value);
+  };
+
+  const handleModelNameChange = (value: string) => {
+    setModelName(value);
   };
 
   const handleLensPositionChange = (value: string) => {
@@ -74,9 +79,10 @@ function NewScan() {
         <Button text={'Move Slider'} onClick={() => moveSlider()}></Button>
         <Button text={'Move Motor'} onClick={() => moveMotor()}></Button>
         <Button text={'Move Tilt'} onClick={() => moveTilt()}></Button>
-        <Button text={'Send Images'} onClick={() => sendImages(imageServerIP)}></Button>
+        <Button text={'Send Images'} onClick={() => sendImages(imageServerIP, modelName)}></Button>
         <Button text={'View Images'} onClick={toggleImageGallery}></Button>
         <InputBox onInputChange={handleServerIPChange} placeHolder={'Server IP Address'} />
+        <InputBox onInputChange={handleModelNameChange} placeHolder={'Model Name'} />
         <img src={`${apiPrefix}/video_feed`} width={'90%'} alt='Video_Feed' />
         {/* {isScanning &&
           (
