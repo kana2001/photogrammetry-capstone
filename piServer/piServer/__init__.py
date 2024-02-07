@@ -145,7 +145,23 @@ def create_app(test_config=None):
     @app.route('/models')
     def modelsRoute():
         return get_models_from_imageServer()
+
+    @app.route('/delete_images', methods=['POST'])
+    def delete_images():
+        folder_path = 'capturedImages'
+        try:
+            for filename in os.listdir(folder_path):
+                file_path = os.path.join(folder_path, filename)
+                if filename.endswith(('.jpg', '.jpeg', '.png', '.gif')):
+                    os.unlink(file_path)
+        except OSError as e:
+            return f'Error deleting images: {e}'
+        return 'Images deleted successfully!'
+
+
     return app
+
+    
 
 # if __name__ == "__main__":
 #     # Change the host and port here

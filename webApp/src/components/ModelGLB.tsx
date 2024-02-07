@@ -53,7 +53,7 @@ const ModelGLB: React.FC<ModelViewerJSX>= ({src, iosSrc, poster}) => {
         style={{width:"80vw", height:"80vh"}}
       >
         <div className="poster" slot="poster">
-          <img className="pre-prompt" src="/glb/prompt.svg" alt="pre-prompt" />
+          <img className="pre-prompt" src={poster} alt="pre-prompt" />
         </div>
       </model-viewer>
     </div>
