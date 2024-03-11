@@ -36,7 +36,7 @@ const Gallery: React.FC<GalleryProps> = ({models }) => {
             style={{maxWidth:'25%', padding:'2px'}}
             className={'model-thumbnail'}
           />
-        ))}
+        )).reverse()}
       </div>
       {selectedModel && (
           <ModelPopup image={selectedModel} onClose={handleClosePopup} />

@@ -108,7 +108,7 @@ function NewScan() {
         <Button text={'Camera Control'} onClick={(toggleCameraControlScreen)}></Button>
         {/* <Button text={'Turn On Motor'} onClick={() => turnOn()}></Button>
         <Button text={'Turn Off Motor'} onClick={() => turnOff()}></Button> */}
-        <Button text={'Move Slider'} onClick={() => moveSlider()}></Button>
+        {/* <Button text={'Move Slider'} onClick={() => moveSlider()}></Button> */}
         <Button text={'Move Motor'} onClick={() => moveMotor()}></Button>
         <Button text={'Move Tilt'} onClick={() => moveTilt()}></Button>
         <Button text={'Move Tilt2'} onClick={() => moveTilt2()}></Button>
