@@ -1,4 +1,4 @@
-const apiPrefix = "http://100.92.5.20:5000"
+const apiPrefix = "http://127.0.0.1:5000"
 
 // Function to make a GET request to /turnOn route
 export async function turnOn(): Promise<string> {
@@ -64,6 +64,51 @@ export async function moveSlider(): Promise<string> {
 export async function moveTilt(): Promise<string> {
     try {
         const response = await fetch(`${apiPrefix}/moveTilt`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.text();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
+// Function to make a GET request to /moveTilt route
+export async function moveTilt2(): Promise<string> {
+    try {
+        const response = await fetch(`${apiPrefix}/moveTilt2`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.text();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
+// Function to make a GET request to /moveTilt route
+export async function moveTilt3(): Promise<string> {
+    try {
+        const response = await fetch(`${apiPrefix}/moveTilt3`);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.text();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
+
+// Function to make a GET request to /resetTilt route
+export async function resetTilt(): Promise<string> {
+    try {
+        const response = await fetch(`${apiPrefix}/resetTilt`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
