@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../components/Button';
-import { moveMotor, sendImages, captureImage, setManualFocus, setAutoFocus, moveSlider, moveTilt, moveTilt2, moveTilt3, resetTilt } from '../services/API';
+import { moveMotor, sendImages, captureImage, setManualFocus, setAutoFocus, moveSlider, moveTilt, moveTilt2, moveTilt3, resetTilt, deleteImages } from '../services/API';
 import InputBox from '../components/InputBox';
 import Popup from '../components/Popup';
 import ReactLoading, { LoadingType } from 'react-loading';
@@ -133,6 +133,7 @@ function NewScan() {
                 <img key={index} src={image} alt={`info-${index}`} style={{ width: '100px', height: "auto" }} />
               ))}
             </div>
+            <Button text={'Delete Images'} onClick={() => deleteImages()}></Button>
           </Popup>
         )}
 

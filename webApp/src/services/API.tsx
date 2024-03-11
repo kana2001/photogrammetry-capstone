@@ -138,6 +138,28 @@ export async function sendImages(ipAddress: string, modelName:string): Promise<s
     }
 }
 
+// Function to make a GET request to /delete_images route with IP address and modelName query parameters
+export async function deleteImages(): Promise<string> {
+    try {
+        const url = `${apiPrefix}/delete_images`;
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const data = await response.text();
+        return data;
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+}
 
 // Function to make a GET request to /captureImage route
 export async function captureImage(setShowShutter: React.Dispatch<React.SetStateAction<boolean>>): Promise<string> {
