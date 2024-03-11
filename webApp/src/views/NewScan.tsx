@@ -65,7 +65,7 @@ function NewScan() {
   );
 
   // TODO: Refactor apiPrefix into a importable const
-  const apiPrefix = "http://127.0.0.1:5000"
+  const apiPrefix = "http://100.92.5.20:5000"
 
   return (
     <div>

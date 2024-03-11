@@ -12,7 +12,7 @@
     . .venv/Scripts/activate
 
 ### Start backend in debug mode
-    flask --app piServer run --debug
+    flask --app piServer run --debug --host=0.0.0.0
 
 ### saving dependencies
     pip freeze > requirements.txt

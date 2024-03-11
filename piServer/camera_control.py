@@ -35,7 +35,7 @@ class Camera:
     def _create_output(self):
         camera = self._camera
         camera.stop_recording()
-        camera.configure(camera.create_video_configuration(main={"size": (1920, 1080)}))
+        camera.configure(camera.create_video_configuration(main={"size": (3840, 2160)}))
         camera.set_controls({"AfMode": controls.AfModeEnum.Continuous})
         output = StreamingOutput()
         camera.start_recording(JpegEncoder(), FileOutput(output))
