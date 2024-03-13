@@ -141,6 +141,40 @@ export async function sendImages(ipAddress: string = '100.80.22.106', modelName:
     }
 }
 
+// Function to poll the /checkStatusFromImage endpoint
+export async function pollStatus(ipAddress: string, modelName: string, updateCallback: (status: boolean) => void, errorCallback?: (error: Error) => void) {
+    const poll = async () => {
+        try {
+            if (!ipAddress) {
+                ipAddress = '100.80.22.106'; // Default IP address if none provided
+            }
+            const url = `${apiPrefix}/checkStatusFromImage?ip=${ipAddress}&modelName=${modelName}`;
+            const response = await fetch(url);
+            
+            if (!response.ok) {
+                throw new Error('Failed to fetch the task status');
+            }
+
+            const statusInfo = await response.json();
+            if (statusInfo.status === 'completed') {
+                updateCallback(false); // Task is completed, update UI or invoke callback
+            } else if (statusInfo.error) {
+                updateCallback(false);
+                // if (errorCallback) errorCallback(new Error(statusInfo.error)); // Handle error if errorCallback is provided
+            } else {
+                // If the status is not 'completed' or there's no error, schedule another check
+                setTimeout(poll, 5000); // Wait 5 seconds before polling again
+            }
+        } catch (error) {
+            updateCallback(false);
+            // if (errorCallback) errorCallback(error); // Handle error if errorCallback is provided
+        }
+    };
+
+    poll(); // Initial call to start the polling process
+}
+
+
 // Function to make a GET request to /delete_images route with IP address and modelName query parameters
 export async function deleteImages(): Promise<string> {
     try {

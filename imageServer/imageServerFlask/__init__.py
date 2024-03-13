@@ -46,6 +46,8 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!'
 
+    # Dictionary to track the status of each model processing
+    task_status = {}
     def handle_receive_files(model_name):
         server.receive_files()
         # Run photogrametry on recieved images
@@ -76,6 +78,7 @@ def create_app(test_config=None):
 
         insert_model(model_name, f'glb/{model_name}.glb',
                      f'usdz/{model_name}.usdz', f'jpg/{model_name}.jpg', 1)
+        task_status[model_name] = "completed"  # Update status upon completion
         print(f'added model {model_name} to db')
 
     @app.route('/openSocketConnection')
@@ -89,6 +92,7 @@ def create_app(test_config=None):
                 "message": "User did not enter a unique model name"
             }
             return jsonify(response), 400
+        task_status[model_name] = "processing"  # Mark as processing
         thread = Thread(target=handle_receive_files, args=(model_name,))
         thread.start()
         response = {
@@ -96,6 +100,12 @@ def create_app(test_config=None):
             "message": "Socket opened successfully"
         }
         return jsonify(response)
+    
+    @app.route('/checkStatus')
+    def checkStatus():
+        model_name = request.args.get('modelName')
+        status = task_status.get(model_name, "not found")
+        return jsonify({"model_name": model_name, "status": status})
 
     @app.route('/model/<string:model_name>/<file_type>')
     def get_model_file_route(model_name, file_type):

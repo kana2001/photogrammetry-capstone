@@ -124,6 +124,25 @@ def create_app(test_config=None):
             return jsonify({"success": False, "message": "User did not enter a unique model name"}), 400
         else:
             return jsonify({"success": False, "message": "Failed to open socket connection"}), 500
+    
+    @app.route('/checkStatusFromImage')
+    def checkStatusFromImage():
+        ip_address = request.args.get('ip')
+        model_name = request.args.get('modelName')
+        dirname = "capturedImages"  # It seems you're not using `dirname` in this route
+        
+        url = f"http://{ip_address}:5050/checkStatus"
+        params = {'modelName': model_name}
+        try:
+            response = requests.get(url, params=params)
+            if response.status_code == 200:
+                status_info = response.json()
+                return jsonify(status_info)
+            else:
+                return jsonify({'error': 'Failed to get status', 'status_code': response.status_code}), response.status_code
+        except requests.exceptions.RequestException as e:
+            # Handle any exceptions that occur during the request
+            return jsonify({'error': str(e)}), 500
 
     @app.route('/video_feed')
     def video_feed():

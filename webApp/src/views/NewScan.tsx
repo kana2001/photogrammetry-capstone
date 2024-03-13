@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Button from '../components/Button';
-import { moveMotor, sendImages, captureImage, setManualFocus, setAutoFocus, moveSlider, moveTilt, moveTilt2, moveTilt3, resetTilt, deleteImages } from '../services/API';
+import { moveMotor, sendImages, captureImage, setManualFocus, setAutoFocus, moveSlider, moveTilt, moveTilt2, moveTilt3, resetTilt, deleteImages, pollStatus } from '../services/API';
 import InputBox from '../components/InputBox';
 import Popup from '../components/Popup';
 import ReactLoading, { LoadingType } from 'react-loading';
@@ -16,6 +16,7 @@ function NewScan() {
   const [isSendImagesScreenOpen, setSendImagesScreenOpen] = useState(false);
   const [lensPosition, setLensPosition] = useState<string>('');
   const [isScanning, setIsScanning] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [showShutter, setShowShutter] = useState(false);
 
   useEffect(() => {
@@ -59,25 +60,25 @@ function NewScan() {
 
   async function scanOperationFull() {
     setIsScanning(true);
-    
+
     for (let i = 0; i < 24; i++) {
       await captureImage(setShowShutter)
       await moveMotor()
-      await delay(500); 
+      await delay(500);
     }
     await moveTilt();
 
     for (let i = 0; i < 24; i++) {
       await captureImage(setShowShutter)
       await moveMotor()
-      await delay(500); 
+      await delay(500);
     }
     await moveTilt2();
-    
+
     for (let i = 0; i < 24; i++) {
       await captureImage(setShowShutter)
       await moveMotor()
-      await delay(500); 
+      await delay(500);
     }
     await moveTilt3();
 
@@ -107,6 +108,7 @@ function NewScan() {
     <div>
       <h1>New Scan</h1>
       <body>
+        {isGenerating && (<Example type='spin' color='black'></Example>)}
         <Shutter show={showShutter} duration={20}></Shutter>
         <Button text={'Start Scan'} onClick={() => scanOperation()}></Button>
         <Button text={'Start Scan Full'} onClick={() => scanOperationFull()}></Button>
@@ -121,7 +123,7 @@ function NewScan() {
         <Button text={'Reset Tilt'} onClick={() => resetTilt()}></Button>
         <Button text={'Model Generation'} onClick={toggleSendImagesScreen}></Button>
         <Button text={'View Images'} onClick={toggleImageGallery}></Button>
-        <img src={`${apiPrefix}/video_feed`} width={'90%'} style={{'paddingTop':'5px'}} alt='Video_Feed' />
+        <img src={`${apiPrefix}/video_feed`} width={'90%'} style={{ 'paddingTop': '5px' }} alt='Video_Feed' />
         {/* {isScanning &&
           (
             <div>
@@ -156,7 +158,13 @@ function NewScan() {
         {isSendImagesScreenOpen && (
           <Popup togglePopup={toggleSendImagesScreen}>
             <h2>Send Images</h2>
-            <Button text={'Send Images'} onClick={() => sendImages(imageServerIP, modelName)}></Button>
+            <Button text={'Send Images'} onClick={() => {
+              setIsGenerating(true);
+              sendImages(imageServerIP, modelName)
+                .then((result) => {
+                  pollStatus(imageServerIP, modelName, setIsGenerating)
+                })
+            }}></Button>
             <InputBox onInputChange={handleServerIPChange} placeHolder={'Server IP Address'} />
             <InputBox onInputChange={handleModelNameChange} placeHolder={'Model Name'} />
           </Popup>
