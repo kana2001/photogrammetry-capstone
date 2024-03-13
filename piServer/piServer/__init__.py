@@ -115,7 +115,6 @@ def create_app(test_config=None):
         
         if not ip_address:
             return jsonify({"success": False, "message": "IP address missing in the query parameter"}), 400
-        
         response = requests.get(f"http://{ip_address}:5050/openSocketConnection?modelName={model_name}")
         
         if response.status_code == 200:

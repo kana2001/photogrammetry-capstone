@@ -13,6 +13,7 @@ function NewScan() {
   const [isImageGalleryOpen, setImageGalleryOpen] = useState(false);
   const [listOfImages, setListOfImages] = useState<string[]>([]);
   const [isCameraControlScreenOpen, setCameraControlScreenOpen] = useState(false);
+  const [isSendImagesScreenOpen, setSendImagesScreenOpen] = useState(false);
   const [lensPosition, setLensPosition] = useState<string>('');
   const [isScanning, setIsScanning] = useState(false);
   const [showShutter, setShowShutter] = useState(false);
@@ -41,6 +42,10 @@ function NewScan() {
 
   const toggleCameraControlScreen = () => {
     setCameraControlScreenOpen(!isCameraControlScreenOpen);
+  };
+
+  const toggleSendImagesScreen = () => {
+    setSendImagesScreenOpen(!isSendImagesScreenOpen);
   };
 
   async function scanOperation() {
@@ -114,11 +119,9 @@ function NewScan() {
         <Button text={'Move Tilt2'} onClick={() => moveTilt2()}></Button>
         <Button text={'Move Tilt3'} onClick={() => moveTilt3()}></Button>
         <Button text={'Reset Tilt'} onClick={() => resetTilt()}></Button>
-        <Button text={'Send Images'} onClick={() => sendImages(imageServerIP, modelName)}></Button>
+        <Button text={'Model Generation'} onClick={toggleSendImagesScreen}></Button>
         <Button text={'View Images'} onClick={toggleImageGallery}></Button>
-        <InputBox onInputChange={handleServerIPChange} placeHolder={'Server IP Address'} />
-        <InputBox onInputChange={handleModelNameChange} placeHolder={'Model Name'} />
-        <img src={`${apiPrefix}/video_feed`} width={'90%'} alt='Video_Feed' />
+        <img src={`${apiPrefix}/video_feed`} width={'90%'} style={{'paddingTop':'5px'}} alt='Video_Feed' />
         {/* {isScanning &&
           (
             <div>
@@ -147,11 +150,17 @@ function NewScan() {
             <InputBox onInputChange={handleLensPositionChange} placeHolder={'Lens Position'} />
             <Button text={'Set Focal Length'} onClick={() => setManualFocus(lensPosition)}></Button>
             <Button text={'Auto Focus Mode'} onClick={() => setAutoFocus()}></Button>
-
-
           </Popup>
         )}
 
+        {isSendImagesScreenOpen && (
+          <Popup togglePopup={toggleSendImagesScreen}>
+            <h2>Send Images</h2>
+            <Button text={'Send Images'} onClick={() => sendImages(imageServerIP, modelName)}></Button>
+            <InputBox onInputChange={handleServerIPChange} placeHolder={'Server IP Address'} />
+            <InputBox onInputChange={handleModelNameChange} placeHolder={'Model Name'} />
+          </Popup>
+        )}
       </body>
     </div>
   );

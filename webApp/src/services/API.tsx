@@ -121,8 +121,11 @@ export async function resetTilt(): Promise<string> {
 }
 
 // Function to make a GET request to /sendImages route with IP address and modelName query parameters
-export async function sendImages(ipAddress: string, modelName:string): Promise<string> {
+export async function sendImages(ipAddress: string = '100.80.22.106', modelName:string): Promise<string> {
     try {
+        if (!ipAddress) {
+            ipAddress = '100.80.22.106';
+        }
         const url = `${apiPrefix}/sendImages?ip=${ipAddress}&modelName=${modelName}`;
         const response = await fetch(url);
 
