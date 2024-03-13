@@ -99,3 +99,11 @@ def setManualFocus(lensPosition):
 def setAutoFocus():
     camera = Camera.get_instance()
     camera.set_controls({"AfMode": controls.AfModeEnum.Continuous})
+
+def getLensPosition():
+    camera = Camera.get_instance()
+    return camera.capture_metadata()['LensPosition']
+
+def getAFMode():
+    camera = Camera.get_instance()
+    return camera.capture_metadata()['AfState']

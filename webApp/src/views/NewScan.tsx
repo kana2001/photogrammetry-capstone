@@ -6,15 +6,19 @@ import Popup from '../components/Popup';
 import ReactLoading, { LoadingType } from 'react-loading';
 import Shutter from '../components/Shutter';
 
+interface NewScanProps {
+  imageServerIP: string;
+  setImageServerIP: React.Dispatch<React.SetStateAction<string>>;
+  lensPosition: string;
+  setLensPosition: React.Dispatch<React.SetStateAction<string>>;
+}
 
-function NewScan() {
-  const [imageServerIP, setimageServerIP] = useState<string>('');
+function NewScan({ imageServerIP, setImageServerIP, lensPosition, setLensPosition }: NewScanProps) {
   const [modelName, setModelName] = useState<string>('');
   const [isImageGalleryOpen, setImageGalleryOpen] = useState(false);
   const [listOfImages, setListOfImages] = useState<string[]>([]);
   const [isCameraControlScreenOpen, setCameraControlScreenOpen] = useState(false);
   const [isSendImagesScreenOpen, setSendImagesScreenOpen] = useState(false);
-  const [lensPosition, setLensPosition] = useState<string>('');
   const [isScanning, setIsScanning] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [showShutter, setShowShutter] = useState(false);
@@ -26,7 +30,7 @@ function NewScan() {
   }, []);
 
   const handleServerIPChange = (value: string) => {
-    setimageServerIP(value);
+    setImageServerIP(value);
   };
 
   const handleModelNameChange = (value: string) => {
@@ -149,9 +153,9 @@ function NewScan() {
             <div>
               <Button text={'Take a picture'} onClick={() => captureImage(setShowShutter)}></Button>
             </div>
-            <InputBox onInputChange={handleLensPositionChange} placeHolder={'Lens Position'} />
+            <InputBox onInputChange={handleLensPositionChange} placeHolder={'Lens Position'} initialValue={lensPosition.toString()} />
             <Button text={'Set Focal Length'} onClick={() => setManualFocus(lensPosition)}></Button>
-            <Button text={'Auto Focus Mode'} onClick={() => setAutoFocus()}></Button>
+            <Button text={'Auto Focus Mode'} onClick={() => { setAutoFocus(); handleLensPositionChange('') }}></Button>
           </Popup>
         )}
 
@@ -165,7 +169,7 @@ function NewScan() {
                   pollStatus(imageServerIP, modelName, setIsGenerating)
                 })
             }}></Button>
-            <InputBox onInputChange={handleServerIPChange} placeHolder={'Server IP Address'} />
+            <InputBox onInputChange={handleServerIPChange} placeHolder={'Server IP Address'} initialValue={imageServerIP} />
             <InputBox onInputChange={handleModelNameChange} placeHolder={'Model Name'} />
           </Popup>
         )}

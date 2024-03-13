@@ -1,13 +1,18 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, useEffect } from 'react';
 
 interface InputBoxProps {
   onInputChange: (value: string) => void;
   placeHolder: string;
+  initialValue?: string;
 }
 
-function InputBox({ onInputChange, placeHolder }: InputBoxProps) {
+function InputBox({ onInputChange, placeHolder, initialValue = '' }: InputBoxProps) {
   // Create a state variable to store the input value in the child component
-  const [inputValue, setInputValue] = useState<string>('');
+  const [inputValue, setInputValue] = useState<string>(initialValue);
+
+  useEffect(() => {
+    setInputValue(initialValue);
+  }, [initialValue]);
 
   // Event handler to update the child's state and call the callback function
   const handleInputChangeLocal = (e: ChangeEvent<HTMLInputElement>) => {

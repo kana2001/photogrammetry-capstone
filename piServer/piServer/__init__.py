@@ -6,7 +6,7 @@ from flask_cors import CORS
 import subprocess
 from .modelTransactions import get_models_from_imageServer
 import send_images
-from camera_control import Camera, capture_image_async, genFrames, setAutoFocus, setManualFocus
+from camera_control import Camera, capture_image_async, genFrames, getAFMode, getLensPosition, setAutoFocus, setManualFocus
 from libcamera import controls
 import RPi.GPIO as GPIO
 import gpio_control
@@ -155,6 +155,12 @@ def create_app(test_config=None):
         capture_image_async(camera)
         return "Image capture initiated"
     
+    @app.route('/getCameraSettings')
+    def getCameraSettingsRoute():
+        lens_position = getLensPosition()
+        afMode = getAFMode()
+        return jsonify({"LensPosition": lens_position, "AFMode": afMode})
+
     @app.route('/setManualFocus')
     def manualFocusRoute():
         lensPosition = request.args.get('lensPosition')
