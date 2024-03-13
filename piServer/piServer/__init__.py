@@ -143,6 +143,23 @@ def create_app(test_config=None):
         except requests.exceptions.RequestException as e:
             # Handle any exceptions that occur during the request
             return jsonify({'error': str(e)}), 500
+        
+    @app.route('/deleteModel')
+    def deleteModelRoute():
+        ip_address = request.args.get('ip')
+        model_name = request.args.get('modelName')
+        url = f"http://{ip_address}:5050/deleteModel"
+        params = {'modelName': model_name}
+        try:
+            response = requests.get(url, params=params)
+            if response.status_code == 200:
+                status_info = response.json()
+                return jsonify(status_info)
+            else:
+                return jsonify({'error': 'Failed to get status', 'status_code': response.status_code}), response.status_code
+        except requests.exceptions.RequestException as e:
+            # Handle any exceptions that occur during the request
+            return jsonify({'error': str(e)}), 500
 
     @app.route('/video_feed')
     def video_feed():

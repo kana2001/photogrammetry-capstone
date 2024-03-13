@@ -6,7 +6,7 @@ import subprocess
 import sqlite3
 import shutil
 # from imageServer.imageServerFlask.dbActions import get_model_file
-from .dbActions import check_unique_model_name, get_all_models_name, get_all_models, get_model_file, insert_model
+from .dbActions import check_unique_model_name, delete_model, get_all_models_name, get_all_models, get_model_file, insert_model
 
 import server
 
@@ -80,6 +80,15 @@ def create_app(test_config=None):
                      f'usdz/{model_name}.usdz', f'jpg/{model_name}.jpg', 1)
         task_status[model_name] = "completed"  # Update status upon completion
         print(f'added model {model_name} to db')
+
+    @app.route('/deleteModel')
+    def deleteModelRoute():
+        model_name = request.args.get('modelName')
+        if model_name:
+            delete_model(model_name)
+            return jsonify({"message": f"Model '{model_name}' deleted successfully."}), 200
+        else:
+            return jsonify({"error": "Model name not provided."}), 400
 
     @app.route('/openSocketConnection')
     def uploadImages():

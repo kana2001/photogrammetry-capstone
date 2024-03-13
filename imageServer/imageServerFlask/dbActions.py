@@ -41,6 +41,34 @@ def insert_model(name, glb_path, usdz_path, jpg_path, scanComplete):
     conn.commit()
     conn.close()
 
+def delete_model(name):
+    conn = sqlite3.connect(dbName)
+    cursor = conn.cursor()
+    
+    # Retrieve paths before deleting the row
+    cursor.execute('''
+    SELECT glb_path, usdz_path, jpg_path FROM models WHERE name = ?
+    ''', (name,))
+    paths = cursor.fetchone()
+    
+    # Delete row
+    cursor.execute('''
+    DELETE FROM models WHERE name = ?
+    ''', (name,))
+    
+    conn.commit()
+    conn.close()
+    
+    # Delete files
+    if paths:
+        for path in paths:
+            if path:
+                full_path = os.path.join("imageServerFlask/models", path)
+                if os.path.exists(full_path):
+                    os.remove(full_path)
+                else:
+                    print(f"File '{full_path}' not found.")
+
 def get_model_file(model_name, file_type):
     # Validate file type
     if file_type not in ['glb', 'usdz', 'jpg']:
