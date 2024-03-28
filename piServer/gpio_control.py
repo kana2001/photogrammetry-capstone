@@ -10,7 +10,7 @@ tilt_gpio_pin = 22
 
 pins = [motor_gpio_pin, slider_gpio_pin, tilt_gpio_pin] 
 # Open a connection to the Arduino
-arduino_camera = serial.Serial('/dev/ttyACM0', 9600)  # Replace '/dev/ttyACM1' with the correct port for your Arduino
+arduino_camera = serial.Serial('/dev/ttyACM1', 9600)  # Replace '/dev/ttyACM1' with the correct port for your Arduino
 arduino_turntable = serial.Serial('/dev/ttyACM0', 9600)
 
 

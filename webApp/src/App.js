@@ -7,6 +7,7 @@ import CompletedScans from './views/CompletedScans';
 function App() {
   const [imageServerIP, setImageServerIP] = useState('');
   const [lensPosition, setLensPosition] = useState('');
+  const [isGenerating, setIsGenerating] = useState(false);
   return (
     <div className="App">
       <header className="App-header">
@@ -27,7 +28,11 @@ function App() {
               imageServerIP={imageServerIP}
               setImageServerIP={setImageServerIP}
               lensPosition={lensPosition}
-              setLensPosition={setLensPosition} />}>
+              setLensPosition={setLensPosition}
+              isGenerating={isGenerating}
+              setIsGenerating={setIsGenerating}
+            />
+            }>
             </Route>
             <Route path="/completed-scans" element={<CompletedScans />}>
             </Route>

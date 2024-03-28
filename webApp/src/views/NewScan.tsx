@@ -11,16 +11,17 @@ interface NewScanProps {
   setImageServerIP: React.Dispatch<React.SetStateAction<string>>;
   lensPosition: string;
   setLensPosition: React.Dispatch<React.SetStateAction<string>>;
+  isGenerating: boolean;
+  setIsGenerating: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function NewScan({ imageServerIP, setImageServerIP, lensPosition, setLensPosition }: NewScanProps) {
+function NewScan({ imageServerIP, setImageServerIP, lensPosition, setLensPosition, isGenerating, setIsGenerating }: NewScanProps) {
   const [modelName, setModelName] = useState<string>('');
   const [isImageGalleryOpen, setImageGalleryOpen] = useState(false);
   const [listOfImages, setListOfImages] = useState<string[]>([]);
   const [isCameraControlScreenOpen, setCameraControlScreenOpen] = useState(false);
   const [isSendImagesScreenOpen, setSendImagesScreenOpen] = useState(false);
   const [isScanning, setIsScanning] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
   const [showShutter, setShowShutter] = useState(false);
 
   useEffect(() => {
@@ -55,7 +56,7 @@ function NewScan({ imageServerIP, setImageServerIP, lensPosition, setLensPositio
 
   async function scanOperation() {
     setIsScanning(true);
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 25; i++) {
       await captureImage(setShowShutter)
       await moveMotor()
     }
@@ -65,21 +66,21 @@ function NewScan({ imageServerIP, setImageServerIP, lensPosition, setLensPositio
   async function scanOperationFull() {
     setIsScanning(true);
 
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 25; i++) {
       await captureImage(setShowShutter)
       await moveMotor()
       await delay(500);
     }
     await moveTilt();
 
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 25; i++) {
       await captureImage(setShowShutter)
       await moveMotor()
       await delay(500);
     }
     await moveTilt2();
 
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 25; i++) {
       await captureImage(setShowShutter)
       await moveMotor()
       await delay(500);
@@ -112,7 +113,6 @@ function NewScan({ imageServerIP, setImageServerIP, lensPosition, setLensPositio
     <div>
       <h1>New Scan</h1>
       <body>
-        {isGenerating && (<Example type='spin' color='black'></Example>)}
         <Shutter show={showShutter} duration={20}></Shutter>
         <Button text={'Start Scan'} onClick={() => scanOperation()}></Button>
         <Button text={'Start Scan Full'} onClick={() => scanOperationFull()}></Button>
@@ -125,7 +125,12 @@ function NewScan({ imageServerIP, setImageServerIP, lensPosition, setLensPositio
         <Button text={'Move Tilt2'} onClick={() => moveTilt2()}></Button>
         <Button text={'Move Tilt3'} onClick={() => moveTilt3()}></Button>
         <Button text={'Reset Tilt'} onClick={() => resetTilt()}></Button>
-        <Button text={'Model Generation'} onClick={toggleSendImagesScreen}></Button>
+        <Button text={'Model Generation'} onClick={toggleSendImagesScreen} disabled={isGenerating}>
+          <span style={{ display: 'inline-block' }}>
+            {isGenerating && (<ReactLoading type={'spin'} color={'black'} height={15} width={15} />)}
+          </span>
+        </Button>
+
         <Button text={'View Images'} onClick={toggleImageGallery}></Button>
         <img src={`${apiPrefix}/video_feed`} width={'90%'} style={{ 'paddingTop': '5px' }} alt='Video_Feed' />
         {/* {isScanning &&
@@ -164,6 +169,7 @@ function NewScan({ imageServerIP, setImageServerIP, lensPosition, setLensPositio
             <h2>Send Images</h2>
             <Button text={'Send Images'} onClick={() => {
               setIsGenerating(true);
+              setSendImagesScreenOpen(false);
               sendImages(imageServerIP, modelName)
                 .then((result) => {
                   pollStatus(imageServerIP, modelName, setIsGenerating)
